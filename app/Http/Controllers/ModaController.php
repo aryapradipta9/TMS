@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Moda;
 use App\Vendor;
 use Illuminate\Http\Request;
+use App\Http\Requests\ModaReq;
 
-class VendorController extends Controller
+class ModaController extends Controller
 {
 
     /**
@@ -17,7 +19,7 @@ class VendorController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -25,9 +27,9 @@ class VendorController extends Controller
      */
     public function index()
     {
-        $vendors = Vendor::all();
+        $modas = Moda::all();
 
-        return view('vendorTable', compact('vendors'));
+        return view('modaTable', compact('modas'));
     }
 
     /**
@@ -37,7 +39,8 @@ class VendorController extends Controller
      */
     public function create()
     {
-        return view('vendor');
+        $vendors = Vendor::pluck('nama', 'nama');
+        return view('moda', compact('vendors'));
     }
 
     /**
@@ -46,28 +49,34 @@ class VendorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ModaReq $modareq)
     {
-        $vendor = [];
+        $request = $modareq->validated();
+        $moda = [];
 
-        $vendor['nama'] = $request->get('nama');
-        $vendor['mail'] = $request->get('mail');
-        $vendor['jenis'] = $request->get('jenis');
-        $vendor['alamat'] = $request->get('alamat');
-        $vendor['telp'] = $request->get('telp');
-        $vendor['contact'] = $request->get('contact');
-        Vendor::create($vendor);
+        $moda['nama'] = $request['nama'];
+        $moda['vendor'] = $request['vendor'];
+        $moda['quantity'] = $request['quantity'];
+        $moda['tonase'] = $request['tonase'];
+        $moda['duration'] = $request['duration'];
+        $moda['startFrom'] = $request['startFrom'];
+        $moda['endTo'] = $request['endTo'];
+        $moda['status'] = '0';
+        // $customer = Request::all();
+        // Mail delivery logic goes here
 
-        return redirect()->route('vendor');
+        Moda::create($moda);
+        
+        return redirect()->route('moda');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Vendor  $vendor
+     * @param  \App\Moda  $moda
      * @return \Illuminate\Http\Response
      */
-    public function show(Vendor $vendor)
+    public function show(Moda $moda)
     {
         //
     }
@@ -75,10 +84,10 @@ class VendorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Vendor  $vendor
+     * @param  \App\Moda  $moda
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vendor $vendor)
+    public function edit(Moda $moda)
     {
         //
     }
@@ -87,10 +96,10 @@ class VendorController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Vendor  $vendor
+     * @param  \App\Moda  $moda
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vendor $vendor)
+    public function update(Request $request, Moda $moda)
     {
         //
     }
@@ -98,10 +107,10 @@ class VendorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Vendor  $vendor
+     * @param  \App\Moda  $moda
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vendor $vendor)
+    public function destroy(Moda $moda)
     {
         //
     }

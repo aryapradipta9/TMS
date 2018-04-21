@@ -30,3 +30,9 @@ Route::get('/vendor', 'VendorController@index')->name('vendor');
 Route::get('/vendor/add', 'VendorController@create')->name('vendor-form');
 
 Route::post('/vendor/add', 'VendorController@store')->name('vendor-add');
+
+Route::get('/moda', 'ModaController@index')->name('moda');
+
+Route::get('/moda/add', 'ModaController@create')->name('moda-form');
+
+Route::post('/moda/add', 'ModaController@store')->name('moda-add');
