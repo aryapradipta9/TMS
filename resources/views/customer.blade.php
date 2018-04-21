@@ -25,6 +25,25 @@ Customer
         </div>
 </div>
 <div class="form-group">
+        {!! Form::label('kecamatan', 'Kecamatan', ['class' => 'control-label col-sm-1']) !!}
+        <div class="col-sm-11">
+        {!! Form::text('kecamatan', null, ['class' => 'form-control']) !!}
+        </div>
+</div>
+<div class="form-group">
+        {!! Form::label('kabupaten', 'Kab / Kota', ['class' => 'control-label col-sm-1']) !!}
+        <div class="col-sm-11">
+        {!! Form::text('kabupaten', null, ['class' => 'form-control']) !!}
+        </div>
+</div>
+<div class="form-group">
+        {!! Form::label('provinsi', 'Provinsi', ['class' => 'control-label col-sm-1']) !!}
+        <div class="col-sm-11">
+        {!! Form::text('provinsi', null, ['class' => 'form-control']) !!}
+        </div>
+</div>
+
+<div class="form-group">
         {!! Form::label('mail', 'Mail', ['class' => 'control-label col-sm-1']) !!}
         <div class="col-sm-11">
         {!! Form::text('mail', null, ['class' => 'form-control']) !!}

@@ -36,3 +36,9 @@ Route::get('/moda', 'ModaController@index')->name('moda');
 Route::get('/moda/add', 'ModaController@create')->name('moda-form');
 
 Route::post('/moda/add', 'ModaController@store')->name('moda-add');
+
+Route::get('/distance', 'DistanceController@index')->name('dist');
+
+Route::get('/distance/add', 'DistanceController@create')->name('dist-form');
+
+Route::post('/distance/add', 'DistanceController@store')->name('dist-add');

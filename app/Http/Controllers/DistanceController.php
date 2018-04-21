@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
-use App\Http\Request\CustomerAddRequest;
+use App\Distance;
 use Illuminate\Http\Request;
+use App\Http\Requests\DistReq;
 
-class CustomerController extends Controller
+class DistanceController extends Controller
 {
-
     /**
      * Create a new controller instance.
      *
@@ -27,9 +26,9 @@ class CustomerController extends Controller
     public function index()
     {
 
-        $customers = Customer::all();
+        $distances = Distance::all();
 
-        return view('customerTable', compact('customers'));
+        return view('distTable', compact('distances'));
     }
 
     /**
@@ -39,43 +38,38 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customer');
+        return view('dist');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Request\CustomerAddRequest;  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DistReq $distReq)
     {
-        $customer = [];
+        $request = $distReq->validated();
+        $distance = [];
 
-        $customer['nama'] = $request->get('nama');
-        $customer['mail'] = $request->get('mail');
-        $customer['jenis'] = $request->get('jenis');
-        $customer['alamat'] = $request->get('alamat');
-        $customer['kecamatan'] = $request->get('kecamatan');
-        $customer['kabupaten'] = $request->get('kabupaten');
-        $customer['provinsi'] = $request->get('provinsi');
-        $customer['no_telp'] = $request->get('telp');
-        $customer['contact_person'] = $request->get('contact');
+        $distance['origin'] = $request['origin'];
+        $distance['dest'] = $request['dest'];
+        $distance['distance'] = $request['distance'];
         // $customer = Request::all();
         // Mail delivery logic goes here
 
-        Customer::create($customer);
-
-        return redirect()->route('customer');
+        Distance::create($distance);
+        
+        return redirect()->route('dist');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Distance  $distance
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Distance $distance)
     {
         //
     }
@@ -83,10 +77,10 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Distance  $distance
      * @return \Illuminate\Http\Response
      */
-    public function edit(Customer $customer)
+    public function edit(Distance $distance)
     {
         //
     }
@@ -95,10 +89,10 @@ class CustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
+     * @param  \App\Distance  $distance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Distance $distance)
     {
         //
     }
@@ -106,10 +100,10 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Distance  $distance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Distance $distance)
     {
         //
     }

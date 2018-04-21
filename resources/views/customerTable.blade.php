@@ -19,6 +19,9 @@ Database Customer
               <th> Nama Customer</th>
               <th> Jenis</th>
               <th> Alamat</th>
+              <th> Kecamatan</th>
+              <th> Kab / Kota</th>
+              <th> Provinsi</th>
               <th> Mail</th>
               <th> No. Tlp</th>
               <th> Contact Person</th>
@@ -31,6 +34,9 @@ Database Customer
                 <td> {{$customer->nama}} </td>
                 <td> {{$customer->jenis}} </td>
                 <td> {{$customer->alamat}} </td>
+                <td> {{$customer->kecamatan}} </td>
+                <td> {{$customer->kabupaten}} </td>
+                <td> {{$customer->provinsi}} </td>
                 <td> {{$customer->mail}} </td>
                 <td> {{$customer->no_telp}} </td>
                 <td> {{$customer->contact_person}} </td>
