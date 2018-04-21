@@ -50,7 +50,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
             'username' => 'required|string',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -65,7 +64,6 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
             'username' => $data['username'],
             // 'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -76,11 +74,11 @@ class RegisterController extends Controller
     {
         
         $this->validator($request->all())->validate();
-        
+        // dd($request->all());
         event(new Registered($user = $this->create($request->all())));
         
         $this->guard()->login($user);
-        // dd($request->all());
+        
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());
     }

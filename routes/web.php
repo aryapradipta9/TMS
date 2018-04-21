@@ -18,3 +18,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/customer', 'CustomerController@index')->name('customer');
+
+Route::get('/customer/add', 'CustomerController@create')->name('customer-form');
+
+Route::post('/customer/add', 'CustomerController@store')->name('customer-add');
+
+Route::get('/vendor', 'VendorController@index')->name('vendor');
+
+Route::get('/vendor/add', 'VendorController@create')->name('vendor-form');
+
+Route::post('/vendor/add', 'VendorController@store')->name('vendor-add');
