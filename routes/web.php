@@ -42,3 +42,9 @@ Route::get('/distance', 'DistanceController@index')->name('dist');
 Route::get('/distance/add', 'DistanceController@create')->name('dist-form');
 
 Route::post('/distance/add', 'DistanceController@store')->name('dist-add');
+
+Route::get('/order', 'OrderController@index')->name('order');
+
+Route::get('/order/add', 'OrderController@create')->name('order-form');
+
+Route::post('/order/add', 'OrderController@store')->name('order-add');
