@@ -6,6 +6,7 @@ use App\Moda;
 use App\Vendor;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModaReq;
+use App\Distance;
 
 class ModaController extends Controller
 {
@@ -43,6 +44,43 @@ class ModaController extends Controller
         return view('moda', compact('vendors'));
     }
 
+    public function showModa()
+    {
+        $modas = Moda::all();
+
+        return view('modaSelect', compact('modas'));
+    }
+
+    public function select(Request $request)
+    {
+        $selection = $request->get('pickModa');
+        // ambil lokasi vendor
+        $namaModa = Moda::where('id',$selection)->first();
+        $alamat = Vendor::where('nama',$namaModa->vendor)->value('alamat');
+        
+        // query jarak terdekat dari vendor
+        $tonase = $namaModa->tonase;
+        while ($tonase > 0) {
+            // cari seluruh jarak dari vendor ke tempat
+            $listJarak = Distance::where('origin', $alamat)->get();
+            $list = [];
+            foreach ($listJarak as $jarak) {
+                $list[$jarak->dest] = $jarak->distance;
+            }
+            $listJarak = Distance::where('dest', $alamat)->get();
+            foreach ($listJarak as $jarak) {
+                $list[$jarak->origin] = $jarak->distance;
+            }
+            $originList = [];
+            $dummy = ['tamansari','cblng'];
+            foreach ($dummy as $dumm) {
+                $originList[$dumm] = $list[$dumm];
+            }
+            asort($originList);
+            dd($originList);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -56,6 +94,7 @@ class ModaController extends Controller
 
         $moda['nama'] = $request['nama'];
         $moda['vendor'] = $request['vendor'];
+        $moda['contact'] = $request['contact'];
         $moda['quantity'] = $request['quantity'];
         $moda['tonase'] = $request['tonase'];
         $moda['duration'] = $request['duration'];

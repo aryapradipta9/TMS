@@ -48,3 +48,9 @@ Route::get('/order', 'OrderController@index')->name('order');
 Route::get('/order/add', 'OrderController@create')->name('order-form');
 
 Route::post('/order/add', 'OrderController@store')->name('order-add');
+
+Route::post('/order/select', 'OrderController@select')->name('order-select');
+
+Route::get('/moda/select', 'ModaController@showModa')->name('moda-show');
+
+Route::post('/moda/select', 'ModaController@select')->name('moda-select');

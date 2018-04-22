@@ -13,9 +13,11 @@ Database Sales Order
 
 @if($orders->count() > 0)
 <?php $id = 1; ?>
+{{ Form::open(['route' => 'order-select', 'class' => "form-horizontal"]) }}
   <table class="table table-responsive border" id="order-table">
       <thead>
           <tr>
+              <th> </th>
               <th> No</th>
               <th> SO Number</th>
               <th> Customer</th>
@@ -33,6 +35,7 @@ Database Sales Order
       <tbody>
            @foreach($orders as $order)
             <tr>
+                <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td>
                 <td> <?php echo $id ?> </td>
                 <td> {{$order->orderNumber}} </td>
                 <td> {{$order->customer}} </td>
@@ -42,7 +45,7 @@ Database Sales Order
                 <td> {{$order->provinsi}} </td>
                 <td> {{$order->quantity}} </td>
                 <td> {{$order->berat}} </td>
-                <td> {{$order->date}} </td>
+                <td> {{$order->deliveryDate}} </td>
                 <td> {{$order->keterangan}} </td>
                 <td> {{$order->status}} </td>
             </tr>
@@ -50,6 +53,8 @@ Database Sales Order
            @endforeach
      </tbody>
   </table>
+  {{ Form::submit('Submit', ['class' => 'btn btn-info']) }}</div>
+  {{Form::close()}}
   <script>
     //   $(document).ready(function() {
         $('#order-table').dynatable();

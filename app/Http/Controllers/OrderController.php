@@ -6,6 +6,7 @@ use App\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\OrderReq;
 use App\Customer;
+use Session;
 
 class OrderController extends Controller
 {
@@ -68,12 +69,22 @@ class OrderController extends Controller
         $order['deliveryDate'] = $request['deliveryDate'];
         $order['keterangan'] = $request['keterangan'];
         $order['status'] = '0';
-        // $customer = Request::all();
-        // Mail delivery logic goes here
 
         Order::create($order);
         
         return redirect()->route('order');
+    }
+
+    public function select(Request $request){
+        $list = array();
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                $list[] = ($value);
+            }
+            Session::put('list', collect($list));
+        }
+        
+        dd(Session::get('list'));
     }
 
     /**
