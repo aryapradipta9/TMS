@@ -47,7 +47,19 @@ Database Sales Order
                 <td> {{$order->berat}} </td>
                 <td> {{$order->deliveryDate}} </td>
                 <td> {{$order->keterangan}} </td>
-                <td> {{$order->status}} </td>
+                <td> 
+                    @if($order->status == 1)
+                        <label class="switch">
+                           <input type="checkbox" checked disabled>
+                           <span class="slider round"></span>
+                       </label>
+                       @else
+                       <label class="switch">
+                           <input type="checkbox" disabled>
+                           <span class="slider round"></span>
+                       </label>
+                       @endif
+                </td>
             </tr>
             <?php $id++; ?>
            @endforeach

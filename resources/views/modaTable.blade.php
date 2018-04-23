@@ -40,7 +40,19 @@ Database Moda Transportasi
                 <td> {{$moda->duration}} </td>
                 <td> {{$moda->startFrom}} </td>
                 <td> {{$moda->endTo}} </td>
-                <td> {{$moda->status}} </td>
+                <td>
+                     @if($moda->status == 1)
+                     <label class="switch">
+                        <input type="checkbox" checked disabled>
+                        <span class="slider round"></span>
+                    </label>
+                    @else
+                    <label class="switch">
+                        <input type="checkbox" disabled>
+                        <span class="slider round"></span>
+                    </label>
+                    @endif
+                </td>
             </tr>
             <?php $id++; ?>
            @endforeach

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Moda;
 use App\Vendor;
+use App\Customer;
+use App\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModaReq;
 use App\Distance;
@@ -55,15 +57,20 @@ class ModaController extends Controller
     {
         $selection = $request->get('pickModa');
         // ambil lokasi vendor
-        $namaModa = Moda::where('id',$selection)->first();
-        $alamat = Vendor::where('nama',$namaModa->vendor)->value('alamat');
+        $namaModa = Moda::where('id', $selection)->first();
+        $alamat = Vendor::where('nama', $namaModa->vendor)->value('alamat');
         
         // query jarak terdekat dari vendor
         $tonase = $namaModa->tonase;
-        while ($tonase > 0) {
+        $end = false;
+        $dummy = [3,2,1];
+        $debug = array();
+        $i = 0;
+        while ((!($end)) && (sizeof($dummy) > 0)) {
             // cari seluruh jarak dari vendor ke tempat
             $listJarak = Distance::where('origin', $alamat)->get();
             $list = [];
+            $list[$alamat] = 0;
             foreach ($listJarak as $jarak) {
                 $list[$jarak->dest] = $jarak->distance;
             }
@@ -72,13 +79,39 @@ class ModaController extends Controller
                 $list[$jarak->origin] = $jarak->distance;
             }
             $originList = [];
-            $dummy = ['tamansari','cblng'];
+            
             foreach ($dummy as $dumm) {
-                $originList[$dumm] = $list[$dumm];
+                // ambil data tujuan dari order
+                $target = Order::where('id', $dumm)->value('customer');
+                $custLoc = Customer::where('nama', $target)->value('kecamatan');
+                $originList[$dumm] = $list[$custLoc];
             }
             asort($originList);
-            dd($originList);
+            // ambil elemen pertama
+            reset($originList);
+            $nextDest = key($originList);
+            $order = Order::where('id', $nextDest)->first();
+            
+            // nextDest adalah id dari tujuan selanjutnya
+            // var_dump($order);
+            $orderTonase = $order->berat;
+            
+            if ($tonase < $orderTonase) {
+                $end = true;
+            } else {
+                $debug[] = $nextDest;
+                $i++;
+                // masukkan ke database;
+                $order->status = 1;
+                $order->save();
+                $tonase = $tonase - $orderTonase;
+                $alamat = Customer::where('nama', $order->customer)->value('kecamatan');
+                array_splice($dummy, array_search($nextDest, $dummy), 1);
+                // dd($dummy);
+            }
+            
         }
+        dd($debug);
     }
 
     /**
