@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('home');
 });
 
 Auth::routes();
@@ -43,6 +43,10 @@ Route::get('/distance/add', 'DistanceController@create')->name('dist-form');
 
 Route::post('/distance/add', 'DistanceController@store')->name('dist-add');
 
+Route::get('/distance/delete', 'DistanceController@showDelete')->name('dist-showDelete');
+
+Route::post('/distance/delete', 'DistanceController@destroy')->name('dist-delete');
+
 Route::get('/order', 'OrderController@index')->name('order');
 
 Route::get('/order/add', 'OrderController@create')->name('order-form');
@@ -54,3 +58,5 @@ Route::post('/order/select', 'OrderController@select')->name('order-select');
 Route::get('/moda/select', 'ModaController@showModa')->name('moda-show');
 
 Route::post('/moda/select', 'ModaController@select')->name('moda-select');
+
+Route::get('/routing', 'RouteController@index')->name('routing');

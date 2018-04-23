@@ -30,7 +30,8 @@ class OrderController extends Controller
         $orders = Order::all();
         foreach ($orders as $order) {
             // query
-            $dataCust = Customer::where('nama', $order['customer'])->first();
+            $dataCust = Customer::where('id', $order['customer'])->first();
+            $order['customer'] = $dataCust['nama'];
             $order['kecamatan'] = $dataCust['kecamatan'];
             $order['kabupaten'] = $dataCust['kabupaten'];
             $order['provinsi'] = $dataCust['provinsi'];
@@ -46,7 +47,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $customers = Customer::pluck('nama', 'nama');
+        $customers = Customer::pluck('nama', 'id');
         return view('order', compact('customers'));
     }
 

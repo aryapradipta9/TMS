@@ -26,6 +26,7 @@ class ModaReq extends FormRequest
         return [
             'nama'    => 'required',
             'vendor'    => 'required',
+            'contact'    => 'required',
             'quantity'   => 'required|numeric',
             'tonase'     => 'required|numeric',
             'duration'    => 'required|numeric',

@@ -42,7 +42,7 @@ class ModaController extends Controller
      */
     public function create()
     {
-        $vendors = Vendor::pluck('nama', 'nama');
+        $vendors = Vendor::pluck('nama', 'id');
         return view('moda', compact('vendors'));
     }
 
@@ -58,18 +58,20 @@ class ModaController extends Controller
         $selection = $request->get('pickModa');
         // ambil lokasi vendor
         $namaModa = Moda::where('id', $selection)->first();
-        $alamat = Vendor::where('nama', $namaModa->vendor)->value('alamat');
+        $alamat = $namaModa->vendor * (-1);
+        
+        // $alamat = Vendor::where('nama', $namaModa->vendor)->value('alamat');
         
         // query jarak terdekat dari vendor
         $tonase = $namaModa->tonase;
         $end = false;
-        $dummy = [3,2,1];
+        $dummy = [2,1,3];
         $debug = array();
         $i = 0;
         while ((!($end)) && (sizeof($dummy) > 0)) {
             // cari seluruh jarak dari vendor ke tempat
             $listJarak = Distance::where('origin', $alamat)->get();
-            $list = [];
+            $list = array();
             $list[$alamat] = 0;
             foreach ($listJarak as $jarak) {
                 $list[$jarak->dest] = $jarak->distance;
@@ -78,13 +80,15 @@ class ModaController extends Controller
             foreach ($listJarak as $jarak) {
                 $list[$jarak->origin] = $jarak->distance;
             }
+            
             $originList = [];
             
+            // if ($i == 1) dd($alamat);
+            // dd($list);
             foreach ($dummy as $dumm) {
                 // ambil data tujuan dari order
-                $target = Order::where('id', $dumm)->value('customer');
-                $custLoc = Customer::where('nama', $target)->value('kecamatan');
-                $originList[$dumm] = $list[$custLoc];
+                $idTujuan = Order::where('id', $dumm)->value('customer');
+                $originList[$dumm] = $list[$idTujuan];
             }
             asort($originList);
             // ambil elemen pertama
@@ -94,6 +98,7 @@ class ModaController extends Controller
             
             // nextDest adalah id dari tujuan selanjutnya
             // var_dump($order);
+            // 
             $orderTonase = $order->berat;
             
             if ($tonase < $orderTonase) {
@@ -105,7 +110,8 @@ class ModaController extends Controller
                 $order->status = 1;
                 $order->save();
                 $tonase = $tonase - $orderTonase;
-                $alamat = Customer::where('nama', $order->customer)->value('kecamatan');
+                // $alamat = Customer::where('nama', $order->customer)->value('kecamatan');
+                $alamat = $order->customer;
                 array_splice($dummy, array_search($nextDest, $dummy), 1);
                 // dd($dummy);
             }

@@ -16,16 +16,17 @@ class CreateModasTable extends Migration
         Schema::create('modas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nama');
-            $table->string('vendor');
+            $table->unsignedInteger('vendor');
             $table->bigInteger('quantity')->unsigned();
             $table->bigInteger('tonase')->unsigned();
             $table->integer('duration')->unsigned();
             $table->date('startFrom');
             $table->date('endTo');
             $table->char('status');
-
+            $table->string('contact');
+            
             $table->foreign('vendor')
-                ->references('nama')
+                ->references('id')
                 ->on('vendors')
                 ->onDelete('cascade');
         });

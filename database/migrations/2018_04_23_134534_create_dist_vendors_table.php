@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoutingsTable extends Migration
+class CreateDistVendorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,20 @@ class CreateRoutingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('routings', function (Blueprint $table) {
+        Schema::create('dist_vendors', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('orderNumber');
-            $table->unsignedInteger('truck');
+            $table->unsignedInteger('origin');
+            $table->unsignedInteger('dest');
+            $table->unsignedInteger('distance');
 
-            $table->foreign('orderNumber')
+            $table->foreign('origin')
                 ->references('id')
-                ->on('orders')
+                ->on('vendors')
                 ->onDelete('cascade');
-            $table->foreign('truck')
+            $table->foreign('dest')
                 ->references('id')
-                ->on('modas')
+                ->on('customers')
                 ->onDelete('cascade');
-            
         });
     }
 
@@ -37,6 +37,6 @@ class CreateRoutingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('routings');
+        Schema::dropIfExists('dist_vendors');
     }
 }

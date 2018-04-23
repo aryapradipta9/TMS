@@ -15,9 +15,9 @@ class CreateDistancesTable extends Migration
     {
         Schema::create('distances', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('origin');
-            $table->string('dest');
-            $table->integer('distance')->unsigned();
+            $table->integer('origin');
+            $table->integer('dest');
+            $table->unsignedInteger('distance');
         });
     }
 

@@ -7,15 +7,15 @@ Distance
 @section('main-content')
 {{ Form::open(['route' => 'dist-add', 'class' => "form-horizontal"]) }}
 <div class="form-group">
-    {!! Form::label('origin', 'Origin', ['class' => 'control-label col-sm-1']) !!}
-    <div class="col-sm-11">
-    {!! Form::text('origin', null, ['class' => 'form-control']) !!}
+        {!! Form::label('origin', 'Origin', ['class' => 'control-label col-sm-1']) !!}
+        <div class="col-sm-11">
+        {!! Form::select('origin', $customers, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 <div class="form-group">
         {!! Form::label('dest', 'Destination', ['class' => 'control-label col-sm-1']) !!}
         <div class="col-sm-11">
-        {!! Form::text('dest', null, ['class' => 'form-control']) !!}
+        {!! Form::select('dest', $customers, null, ['class' => 'form-control']) !!}
         </div>
 </div>
 <div class="form-group">

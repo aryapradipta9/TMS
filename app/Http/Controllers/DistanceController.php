@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Distance;
 use Illuminate\Http\Request;
 use App\Http\Requests\DistReq;
+use App\Customer;
+use App\Vendor;
 
 class DistanceController extends Controller
 {
@@ -27,7 +29,15 @@ class DistanceController extends Controller
     {
 
         $distances = Distance::all();
-
+        foreach ($distances as $distance) {
+            if ($distance['origin'] < 0) {
+                $distance['origin'] = Vendor::where('id', ($distance['origin'] * (-1) ))->value('nama');
+            } else {
+                $distance['origin'] = Customer::where('id', $distance['origin'])->value('nama');
+            }
+            $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+        }
+        
         return view('distTable', compact('distances'));
     }
 
@@ -38,7 +48,15 @@ class DistanceController extends Controller
      */
     public function create()
     {
-        return view('dist');
+        $customers = Customer::pluck('nama', 'id')->toArray();
+        $vendors = Vendor::pluck('nama', 'id')->toArray();
+        $new = array();
+        foreach($vendors as $key => $vendor) {
+            $customers[$key * (-1)] = $vendor;
+        }
+        // $customers = $customers->merge($new);
+        // dd($customers);
+        return view('dist', compact('customers'));
     }
 
     /**
@@ -97,14 +115,29 @@ class DistanceController extends Controller
         //
     }
 
+    public function showDelete() {
+        $distances = Distance::all();
+        foreach ($distances as $distance) {
+            $distance['origin'] = Customer::where('id', $distance['origin'])->value('nama');
+            $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+        }
+        
+        return view('distDelete', compact('distances'));
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Distance  $distance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Distance $distance)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                Distance::where('id', $value)->delete();
+            }
+        }
+        return redirect()->route('dist');
     }
 }
