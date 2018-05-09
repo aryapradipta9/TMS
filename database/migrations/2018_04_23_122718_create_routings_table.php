@@ -16,7 +16,12 @@ class CreateRoutingsTable extends Migration
         Schema::create('routings', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('orderNumber');
+            $table->unsignedInteger('totalJarak');
+            $table->unsignedInteger('totalBerat');
+            $table->date('deliveryDate');
+            $table->string('keterangan');
             $table->unsignedInteger('truck');
+            $table->unsignedInteger('groupId');
 
             $table->foreign('orderNumber')
                 ->references('id')

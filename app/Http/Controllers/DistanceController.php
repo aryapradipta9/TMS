@@ -35,7 +35,11 @@ class DistanceController extends Controller
             } else {
                 $distance['origin'] = Customer::where('id', $distance['origin'])->value('nama');
             }
-            $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+            if ($distance['dest'] < 0) {
+                $distance['dest'] = Vendor::where('id', ($distance['dest'] * (-1) ))->value('nama');
+            } else {
+                $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+            }
         }
         
         return view('distTable', compact('distances'));
@@ -69,10 +73,31 @@ class DistanceController extends Controller
     {
         $request = $distReq->validated();
         $distance = [];
-
+        
         $distance['origin'] = $request['origin'];
         $distance['dest'] = $request['dest'];
-        $distance['distance'] = $request['distance'];
+        if ($distance['origin'] < 0) {
+            // adalah vendor
+            $tempOrigin = $distance['origin'] * (-1);
+            $origin = urlencode(Vendor::where('id', $tempOrigin)->value('alamat'));
+        } else {
+            $origin = urlencode(Customer::where('id', $distance['origin'])->value('alamat'));
+        }
+        if ($distance['dest'] < 0) {
+            // adalah vendor
+            $tempDest = $distance['dest'] * (-1);
+            $dest = urlencode(Vendor::where('id', $tempDest)->value('alamat'));
+        } else {
+            $dest = urlencode(Customer::where('id', $distance['dest'])->value('alamat'));
+        }
+        // $origin = urlencode($distance['origin']);
+        // $dest = urlencode($distance['dest']);
+        $url = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyB9RTBNGIx12uQTs3OhOjNUUhN6K8i_GvU&origin=' . $origin . '&destination=' . $dest;
+        // dd($url);
+        $json = json_decode(file_get_contents($url), true);
+        // dd($json);
+        $distance['distance'] = $json['routes'][0]['legs'][0]['distance']['value'];
+        
         // $customer = Request::all();
         // Mail delivery logic goes here
 
@@ -136,6 +161,7 @@ class DistanceController extends Controller
         if ($request->has('pick')) {
             foreach ($request->input('pick') as $value) {
                 Distance::where('id', $value)->delete();
+
             }
         }
         return redirect()->route('dist');

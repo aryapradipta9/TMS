@@ -54,6 +54,9 @@ Database Moda Transportasi
   <script>
     //   $(document).ready(function() {
         $('#moda-table').dynatable();
+        @if (Session::has('alert-route'))
+            alert('Ada moda lain yang bisa menampung');
+        @endif
     //   });
       
   </script>

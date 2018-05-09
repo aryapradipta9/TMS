@@ -6,9 +6,12 @@ use App\Moda;
 use App\Vendor;
 use App\Customer;
 use App\Order;
+use App\Routing;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModaReq;
 use App\Distance;
+use Carbon;
+use Session;
 
 class ModaController extends Controller
 {
@@ -55,9 +58,29 @@ class ModaController extends Controller
 
     public function select(Request $request)
     {
+        $dummy = Session::get('list')->toArray(); // ambil seluruh order
+        $totalTonase = 0;
+        foreach ($dummy as $orderId) {
+            $totalTonase += Order::where('id', $orderId)->value('berat');
+        }
+
         $selection = $request->get('pickModa');
         // ambil lokasi vendor
         $namaModa = Moda::where('id', $selection)->first();
+        
+        if ($namaModa->tonase < $totalTonase) { // mobil saat ini tidak bisa menampung
+            $otherTruck = Moda::where([
+                ['tonase', '>=', $totalTonase],
+                ['quantity', '>', 0]
+            ])->get();
+            
+            if ($otherTruck->count() > 0) {
+                // kasitau kl ada mobil lain yg bisa nampung
+                $request->session()->flash('alert-route', 'Ada mobil yang bisa menampung');
+                return redirect()->route('moda-show');
+            }
+        }
+       
         $alamat = $namaModa->vendor * (-1);
         
         // $alamat = Vendor::where('nama', $namaModa->vendor)->value('alamat');
@@ -65,9 +88,14 @@ class ModaController extends Controller
         // query jarak terdekat dari vendor
         $tonase = $namaModa->tonase;
         $end = false;
-        $dummy = [2,1,3];
+        
         $debug = array();
+        // ambil group id
+        $groupId = Routing::max('groupId');
+        $groupId = isset($groupId) ? $groupId + 1 : 1;
+
         $i = 0;
+        $totalJarak = 0;
         while ((!($end)) && (sizeof($dummy) > 0)) {
             // cari seluruh jarak dari vendor ke tempat
             $listJarak = Distance::where('origin', $alamat)->get();
@@ -83,17 +111,17 @@ class ModaController extends Controller
             
             $originList = [];
             
-            // if ($i == 1) dd($alamat);
-            // dd($list);
             foreach ($dummy as $dumm) {
                 // ambil data tujuan dari order
                 $idTujuan = Order::where('id', $dumm)->value('customer');
-                $originList[$dumm] = $list[$idTujuan];
+                $originList[$dumm] = isset($list[$idTujuan]) ? $list[$idTujuan] : 999999999;
             }
             asort($originList);
             // ambil elemen pertama
             reset($originList);
             $nextDest = key($originList);
+            $totalJarak = $totalJarak + $originList[$nextDest];
+            
             $order = Order::where('id', $nextDest)->first();
             
             // nextDest adalah id dari tujuan selanjutnya
@@ -106,6 +134,7 @@ class ModaController extends Controller
             } else {
                 $debug[] = $nextDest;
                 $i++;
+                
                 // masukkan ke database;
                 $order->status = 1;
                 $order->save();
@@ -117,7 +146,24 @@ class ModaController extends Controller
             }
             
         }
-        dd($debug);
+        $tonase = $namaModa->tonase - $tonase;
+        $namaModa->quantity = $namaModa->quantity - 1;
+        $namaModa->save();
+
+        foreach ($debug as $value) {
+            $order = Order::where('id', $value)->first();
+            $routing = [];
+            $routing['orderNumber'] = $value;
+            $routing['totalJarak'] = $totalJarak;
+            $routing['totalBerat'] = $tonase;
+            $routing['deliveryDate'] = Carbon\Carbon::now();
+            $routing['keterangan'] = 'ini keterangan';
+            $routing['truck'] = $namaModa->id;
+            $routing['groupId'] = $groupId;
+
+            Routing::create($routing);
+        }
+        return redirect()->route('moda-select');
     }
 
     /**

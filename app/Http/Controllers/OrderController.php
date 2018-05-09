@@ -84,8 +84,7 @@ class OrderController extends Controller
             }
             Session::put('list', collect($list));
         }
-        
-        dd(Session::get('list'));
+        return redirect()->route('moda-select');
     }
 
     /**

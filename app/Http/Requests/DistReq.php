@@ -25,8 +25,7 @@ class DistReq extends FormRequest
     {
         return [
             'origin'    => 'required',
-            'dest'    => 'required',
-            'distance'   => 'required|numeric'
+            'dest'    => 'required'
         ];
     }
 }

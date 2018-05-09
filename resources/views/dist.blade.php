@@ -18,12 +18,6 @@ Distance
         {!! Form::select('dest', $customers, null, ['class' => 'form-control']) !!}
         </div>
 </div>
-<div class="form-group">
-        {!! Form::label('distance', 'Distance', ['class' => 'control-label col-sm-1']) !!}
-        <div class="col-sm-11">
-        {!! Form::number('distance', null, ['class' => 'form-control']) !!}
-        </div>
-</div>
 <div class="col-sm-10"></div>
 <div class="col-sm-2">
         {{ Form::submit('Submit', ['class' => 'btn btn-info']) }}</div>

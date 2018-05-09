@@ -19,7 +19,7 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/jquery.dynatable.js') }}"></script>
 </head>
-<body style="height:100%; overflow:hidden;">
+<body style="height:100%;">
     <div id="app" style="height:100%; min-height: 100%;">
         
         <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:15px;">

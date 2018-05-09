@@ -35,7 +35,11 @@ Database Sales Order
       <tbody>
            @foreach($orders as $order)
             <tr>
-                <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td>
+                <td>
+                    @if ($order->status != 1) 
+                    {{ Form::checkbox('pick[]', $order->id, false) }} 
+                    @endif
+                </td>
                 <td> <?php echo $id ?> </td>
                 <td> {{$order->orderNumber}} </td>
                 <td> {{$order->customer}} </td>

@@ -11,7 +11,7 @@ Database Moda Transportasi
 
 @section('main-content')
 
-@if($modas->count() > 0)
+
 <?php $id = 1; ?>
   <table class="table table-responsive border" id="moda-table">
       <thead>
@@ -28,6 +28,7 @@ Database Moda Transportasi
               <th> Status</th>
           </tr>
       </thead>
+      @if($modas->count() > 0)
       <tbody>
            @foreach($modas as $moda)
             <tr>
