@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Distance;
 use App\Http\Request\CustomerAddRequest;
 use Illuminate\Http\Request;
 
@@ -109,8 +110,21 @@ class CustomerController extends Controller
      * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                Distance::where('origin', $value)->delete();
+                Distance::where('dest', $value)->delete();
+                Customer::where('id', $value)->delete();
+            }
+        }
+        return redirect()->route('customer');
+    }
+
+    public function showDelete() {
+        $customers = Customer::all();
+        
+        return view('customerDelete', compact('customers'));
     }
 }

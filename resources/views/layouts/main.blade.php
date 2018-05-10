@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active nav-side" href={{route('customer')}} id="home-click">
+                  <a class="nav-link active nav-side" href={{route('routing')}} id="home-click">
                       Route
                   </a>
               </li>

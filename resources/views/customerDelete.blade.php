@@ -5,17 +5,17 @@ Database Customer
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger" href="{{ route('cust-showDelete') }}"> Hapus </a>
-<a class="btn btn-primary" href="{{ route('customer-form') }}" type="button"> Input </a>
+
 @endsection
 
 @section('main-content')
-<?php $id = 1; ?>
+
 @if($customers->count() > 0)
+{{ Form::open(['route' => 'cust-delete']) }}
   <table class="table table-responsive border" id="cust-table">
       <thead>
           <tr>
-              <th> No</th>
+              <th> </th>
               <th> Nama Customer</th>
               <th> Jenis</th>
               <th> Alamat</th>
@@ -30,7 +30,7 @@ Database Customer
       <tbody>
            @foreach($customers as $customer)
             <tr>
-                <td> <?php echo $id; $id++; ?> </td>
+                <td> {{ Form::checkbox('pick[]', $customer->id, false) }} </td>
                 <td> {{$customer->nama}} </td>
                 <td> {{$customer->jenis}} </td>
                 <td> {{$customer->alamat}} </td>
@@ -44,6 +44,8 @@ Database Customer
            @endforeach
      </tbody>
   </table>
+  {{ Form::submit('Remove', ['class' => 'btn btn-danger']) }}</div>
+  {{ Form::close() }}
   <script>
     //   $(document).ready(function() {
         $('#cust-table').dynatable();

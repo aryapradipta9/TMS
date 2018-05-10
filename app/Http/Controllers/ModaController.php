@@ -34,7 +34,11 @@ class ModaController extends Controller
     public function index()
     {
         $modas = Moda::all();
-
+        
+        foreach ($modas as $value) {
+            
+            $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
+        }
         return view('modaTable', compact('modas'));
     }
 
@@ -52,9 +56,19 @@ class ModaController extends Controller
     public function showModa()
     {
         $modas = Moda::all();
-
+        foreach ($modas as $value) {
+            $value['vendor'] = Vendor::where('id', $value['vendor'])->value('nama');
+        }
         return view('modaSelect', compact('modas'));
     }
+
+    public function showDelete() {
+        $modas = Moda::all();
+        
+        
+        return view('modaDelete', compact('modas'));
+    }
+
 
     public function select(Request $request)
     {
@@ -228,14 +242,14 @@ class ModaController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Moda  $moda
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Moda $moda)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                Moda::where('id', $value)->delete();
+
+            }
+        }
+        return redirect()->route('moda');
     }
 }

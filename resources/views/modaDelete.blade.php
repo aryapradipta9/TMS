@@ -5,7 +5,7 @@ Database Moda Transportasi
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger" href="{{ route('moda-showDelete') }}"> Hapus </a>
+<a class="btn btn-danger"> Hapus </a>
 <a class="btn btn-primary" href="{{ route('moda-form') }}" type="button"> Input </a>
 @endsection
 
@@ -13,10 +13,11 @@ Database Moda Transportasi
 
 
 <?php $id = 1; ?>
+{{ Form::open(['route' => 'moda-delete']) }}
   <table class="table table-responsive border" id="moda-table">
       <thead>
           <tr>
-              <th> No</th>
+              <th> </th>
               <th> Nama</th>
               <th> Vendor</th>
               <th> Contact</th>
@@ -32,7 +33,7 @@ Database Moda Transportasi
       <tbody>
            @foreach($modas as $moda)
             <tr>
-                <td> <?php echo $id ?> </td>
+                <td> {{ Form::checkbox('pick[]', $moda->id, false) }} </td>
                 <td> {{$moda->nama}} </td>
                 <td> {{$moda->vendor}} </td>
                 <td> {{$moda->contact}} </td>
@@ -59,6 +60,8 @@ Database Moda Transportasi
            @endforeach
      </tbody>
   </table>
+  {{ Form::submit('Remove', ['class' => 'btn btn-danger']) }}</div>
+  {{ Form::close() }}
   <script>
     //   $(document).ready(function() {
         $('#moda-table').dynatable();

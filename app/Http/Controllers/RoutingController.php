@@ -3,10 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Routing;
+use App\Customer;
+use App\Order;
 use Illuminate\Http\Request;
 
 class RoutingController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +26,52 @@ class RoutingController extends Controller
      */
     public function index()
     {
-        //
+        $routing = Routing::orderBy('groupId', 'asc')->get();
+        $newRouting = [];
+        $groupId = 0;
+        foreach ($routing as $value) {
+            if ($value['groupId'] != $groupId) {
+                
+                $groupId = $value->groupId;
+                $custid = Order::where('id', $value['orderNumber'])->value('customer');
+                $value['orderNumber'] = Customer::where('id', $custid)->value('nama');
+                $newRouting[] = $value;
+                
+            } else {
+                $custid = Order::where('id', $value->orderNumber)->value('customer');
+                $namaCust = Customer::where('id', $custid)->value('nama');
+                $last = end($newRouting);
+                // $id = key($newRouting);
+                $last['orderNumber'] = $last['orderNumber'] . ', ' . $namaCust;
+            }
+            
+        }
+        return view('routingTable', compact('newRouting'));
+    }
+
+    public function showDelete()
+    {
+        $routing = Routing::orderBy('groupId', 'asc')->get();
+        $newRouting = [];
+        $groupId = 0;
+        foreach ($routing as $value) {
+            if ($value['groupId'] != $groupId) {
+                
+                $groupId = $value->groupId;
+                $custid = Order::where('id', $value['orderNumber'])->value('customer');
+                $value['orderNumber'] = Customer::where('id', $custid)->value('nama');
+                $newRouting[] = $value;
+                
+            } else {
+                $custid = Order::where('id', $value->orderNumber)->value('customer');
+                $namaCust = Customer::where('id', $custid)->value('nama');
+                $last = end($newRouting);
+                // $id = key($newRouting);
+                $last['orderNumber'] = $last['orderNumber'] . ', ' . $namaCust;
+            }
+            
+        }
+        return view('routingDelete', compact('newRouting'));
     }
 
     /**
@@ -78,8 +135,18 @@ class RoutingController extends Controller
      * @param  \App\Routing  $routing
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Routing $routing)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                $listOrder = Routing::where('groupId', $value)->get();
+                // dd($listRoute);
+                foreach ($listOrder as $order) {
+                    Order::where('id', $order->orderNumber)->update(['status' => 0]);
+                }
+                Routing::where('groupId', $value)->delete();
+            }
+        }
+        return redirect()->route('routing');
     }
 }

@@ -5,17 +5,18 @@ Database Vendor
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger" href="{{ route('vendor-showDelete')}}"> Hapus </a>
+<a class="btn btn-danger"> Hapus </a>
 <a class="btn btn-primary" href="{{ route('vendor-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
-<?php $id = 1; ?>
+
 @if($vendors->count() > 0)
+{{ Form::open(['route' => 'vendor-delete']) }}
   <table class="table table-responsive" id="vendor-table">
       <thead>
           <tr>
-              <th> No</th>
+              <th> </th>
               <th> Nama</th>
               <th> Alamat</th>
               <th> Mail</th>
@@ -26,7 +27,7 @@ Database Vendor
       <tbody>
            @foreach($vendors as $vendor)
             <tr>
-                <td> <?php echo $id; $id++; ?> </td>
+                <td> {{ Form::checkbox('pick[]', $vendor->id, false) }} </td>
                 <td> {{$vendor->nama}} </td>
                 <td> {{$vendor->alamat}} </td>
                 <td> {{$vendor->mail}} </td>
@@ -36,6 +37,8 @@ Database Vendor
            @endforeach
      </tbody>
   </table>
+  {{ Form::submit('Remove', ['class' => 'btn btn-danger']) }}</div>
+  {{ Form::close() }}
   <script>
     //   $(document).ready(function() {
         $('#vendor-table').dynatable();

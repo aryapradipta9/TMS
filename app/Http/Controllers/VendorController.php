@@ -101,8 +101,19 @@ class VendorController extends Controller
      * @param  \App\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vendor $vendor)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                Vendor::where('id', $value)->delete();
+            }
+        }
+        return redirect()->route('vendor');
+    }
+
+    public function showDelete() {
+        $vendors = Vendor::all();
+        
+        return view('vendorDelete', compact('vendors'));
     }
 }

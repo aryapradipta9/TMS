@@ -25,17 +25,29 @@ Route::get('/customer/add', 'CustomerController@create')->name('customer-form');
 
 Route::post('/customer/add', 'CustomerController@store')->name('customer-add');
 
+Route::get('/customer/delete', 'CustomerController@showDelete')->name('cust-showDelete');
+
+Route::post('/customer/delete', 'CustomerController@destroy')->name('cust-delete');
+
 Route::get('/vendor', 'VendorController@index')->name('vendor');
 
 Route::get('/vendor/add', 'VendorController@create')->name('vendor-form');
 
 Route::post('/vendor/add', 'VendorController@store')->name('vendor-add');
 
+Route::get('/vendor/delete', 'VendorController@showDelete')->name('vendor-showDelete');
+
+Route::post('/vendor/delete', 'VendorController@destroy')->name('vendor-delete');
+
 Route::get('/moda', 'ModaController@index')->name('moda');
 
 Route::get('/moda/add', 'ModaController@create')->name('moda-form');
 
 Route::post('/moda/add', 'ModaController@store')->name('moda-add');
+
+Route::get('/moda/delete', 'ModaController@showDelete')->name('moda-showDelete');
+
+Route::post('/moda/delete', 'ModaController@destroy')->name('moda-delete');
 
 Route::get('/distance', 'DistanceController@index')->name('dist');
 
@@ -59,4 +71,8 @@ Route::get('/moda/select', 'ModaController@showModa')->name('moda-show');
 
 Route::post('/moda/select', 'ModaController@select')->name('moda-select');
 
-Route::get('/routing', 'RouteController@index')->name('routing');
+Route::get('/routing', 'RoutingController@index')->name('routing');
+
+Route::get('/routing/delete', 'RoutingController@showDelete')->name('routing-showDelete');
+
+Route::post('/routing/delete', 'RoutingController@destroy')->name('routing-delete');
