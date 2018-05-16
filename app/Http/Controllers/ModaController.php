@@ -10,7 +10,7 @@ use App\Routing;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModaReq;
 use App\Distance;
-use Carbon;
+use Carbon\Carbon;
 use Session;
 
 class ModaController extends Controller
@@ -33,12 +33,15 @@ class ModaController extends Controller
      */
     public function index()
     {
-        $modas = Moda::all();
+        $modas = Moda::where('quantity', '>', 0)->get();
         
         foreach ($modas as $value) {
-            
             $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
+            $value['duration'] .= ' hari';
+            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
         }
+        
         return view('modaTable', compact('modas'));
     }
 
@@ -87,12 +90,20 @@ class ModaController extends Controller
                 ['tonase', '>=', $totalTonase],
                 ['quantity', '>', 0]
             ])->get();
-            
             if ($otherTruck->count() > 0) {
                 // kasitau kl ada mobil lain yg bisa nampung
-                $request->session()->flash('alert-route', 'Ada mobil yang bisa menampung');
+                $request->session()->flash('alert-route', "Ada mobil yang bisa menampung");
                 return redirect()->route('moda-show');
             }
+        }
+        $dateNow = Carbon::now();
+        if (Carbon::parse($namaModa->endTo)->lt($dateNow)) {
+            $request->session()->flash('alert-route', "Masa peminjaman mobil sudah selesai");
+            return redirect()->route('moda-show');
+        }
+        if (Carbon::parse($namaModa->startFrom)->gt($dateNow)) {
+            $request->session()->flash('alert-route', "Masa peminjaman mobil belum dimulai");
+            return redirect()->route('moda-show');
         }
        
         $alamat = $namaModa->vendor * (-1);
@@ -111,7 +122,7 @@ class ModaController extends Controller
         $i = 0;
         $totalJarak = 0;
         while ((!($end)) && (sizeof($dummy) > 0)) {
-            // cari seluruh jarak dari vendor ke tempat
+        // cari seluruh jarak dari vendor ke tempat
             $listJarak = Distance::where('origin', $alamat)->get();
             $list = array();
             $list[$alamat] = 0;
@@ -170,14 +181,14 @@ class ModaController extends Controller
             $routing['orderNumber'] = $value;
             $routing['totalJarak'] = $totalJarak;
             $routing['totalBerat'] = $tonase;
-            $routing['deliveryDate'] = Carbon\Carbon::now();
+            $routing['deliveryDate'] = Carbon::now();
             $routing['keterangan'] = 'ini keterangan';
             $routing['truck'] = $namaModa->id;
             $routing['groupId'] = $groupId;
 
             Routing::create($routing);
         }
-        return redirect()->route('moda-select');
+        return redirect()->route('routing');
     }
 
     /**
@@ -198,7 +209,8 @@ class ModaController extends Controller
         $moda['tonase'] = $request['tonase'];
         $moda['duration'] = $request['duration'];
         $moda['startFrom'] = $request['startFrom'];
-        $moda['endTo'] = $request['endTo'];
+        $carbonDate = Carbon::parse($moda['startFrom']);
+        $moda['endTo'] = $carbonDate->addDays($moda['duration']);
         $moda['status'] = '0';
         // $customer = Request::all();
         // Mail delivery logic goes here

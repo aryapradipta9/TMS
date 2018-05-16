@@ -53,7 +53,7 @@
         <a href="{{route('customer')}}" class="btn btn-lg btn-default"><img src="customer.png"><br> Customer </a>
         </div>
         <div class="col-md-4">
-        <a href="{{route('vendor')}}" class="btn btn-lg btn-default"><img src="vendor.jpg"><br> Vendor </a>
+        <a href="{{route('vendor')}}" class="btn btn-lg btn-default"><img src="vendor.png"><br> Vendor </a>
         </div>
         <div class="col-md-4">
         <a href="{{route('routing')}}" class="btn btn-lg btn-default"><img src="route.png"><br> Routing </a>

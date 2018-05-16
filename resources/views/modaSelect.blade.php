@@ -33,7 +33,11 @@ Database Moda Transportasi
       <tbody>
            @foreach($modas as $moda)
             <tr>
-                <td> {{ Form::radio('pickModa', $moda->id) }} </td>
+                <td>                     
+                    @if ($moda->quantity > 0) 
+                        {{ Form::radio('pickModa', $moda->id) }}
+                        @endif
+                         </td>
                 <td> <?php echo $id ?> </td>
                 <td> {{$moda->nama}} </td>
                 <td> {{$moda->vendor}} </td>
@@ -43,7 +47,17 @@ Database Moda Transportasi
                 <td> {{$moda->duration}} </td>
                 <td> {{$moda->startFrom}} </td>
                 <td> {{$moda->endTo}} </td>
-                <td> {{$moda->status}} </td>
+                <td>                    @if($moda->quantity == 0)
+                        <label class="switch">
+                           <input type="checkbox" checked disabled>
+                           <span class="slider round"></span>
+                       </label>
+                       @else
+                       <label class="switch">
+                           <input type="checkbox" disabled>
+                           <span class="slider round"></span>
+                       </label>
+                       @endif </td>
             </tr>
             <?php $id++; ?>
            @endforeach
@@ -55,7 +69,9 @@ Database Moda Transportasi
     //   $(document).ready(function() {
         $('#moda-table').dynatable();
         @if (Session::has('alert-route'))
-            alert('Ada moda lain yang bisa menampung');
+        var temp = '{{ Session::get('alert-route') }}'
+        alert(temp);
+            // alert("\'" +  {{ Session::get('alert-route') }});
         @endif
     //   });
       

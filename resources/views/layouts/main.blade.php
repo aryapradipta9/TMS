@@ -36,15 +36,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link active nav-side" href={{route('dist')}} id="home-click">
+                        Distance
+                    </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link active nav-side" href={{route('routing')}} id="home-click">
                       Route
                   </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link active nav-side" href={{route('dist')}} id="home-click">
-                    Distance
-                </a>
-            </li>
+              
                   </ul>
                 
                   

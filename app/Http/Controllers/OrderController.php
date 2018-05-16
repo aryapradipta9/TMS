@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\OrderReq;
 use App\Customer;
 use Session;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -36,6 +37,7 @@ class OrderController extends Controller
             $order['kabupaten'] = $dataCust['kabupaten'];
             $order['provinsi'] = $dataCust['provinsi'];
             $order['alamat'] = $dataCust['alamat'];
+            $order['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $order['deliveryDate'])->format('d M Y');
         }
         return view('orderTable', compact('orders'));
     }

@@ -76,3 +76,5 @@ Route::get('/routing', 'RoutingController@index')->name('routing');
 Route::get('/routing/delete', 'RoutingController@showDelete')->name('routing-showDelete');
 
 Route::post('/routing/delete', 'RoutingController@destroy')->name('routing-delete');
+
+Route::get('/routing/details/{id}', 'RoutingController@details')->name('routing-details');

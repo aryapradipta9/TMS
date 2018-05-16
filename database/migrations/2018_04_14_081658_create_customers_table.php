@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration
             $table->string('kabupaten');
             $table->string('provinsi');
             $table->string('mail');
-            $table->bigInteger('no_telp')->unsigned();
+            $table->string('no_telp');
             $table->string('contact_person');
         });
     }

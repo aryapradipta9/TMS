@@ -27,19 +27,26 @@ Moda
 <div class="form-group">
         {!! Form::label('quantity', 'Quantity', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-2">
+                        
         {!! Form::number('quantity', 0, ['class' => 'form-control']) !!}
         </div>
-{{-- </div>
-<div class="form-group"> --}}
+{{-- </div>--}}
+
         {!! Form::label('tonase', 'Tonase', ['class' => 'control-label col-sm-1']) !!}
         <div class="col-sm-2">
+                        <span class="input-group"> 
         {!! Form::number('tonase', 0, ['class' => 'form-control']) !!}
+        <span class="input-group-addon">Text</span>
+                        </span>
         </div>
-{{-- </div>
+{{-- 
 <div class="form-group"> --}}
-        {!! Form::label('duration', 'Duration', ['class' => 'control-label col-sm-1']) !!}
+        {!! Form::label('duration', 'Duration', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-2">
+                        <span class="input-group"> 
         {!! Form::number('duration', 0, ['class' => 'form-control']) !!}
+        <span class="input-group-addon">hari</span>
+                        </span>
         </div>
 </div>
 <div class="form-group">
@@ -49,10 +56,6 @@ Moda
         </div>
 {{-- </div>
 <div class="form-group"> --}}
-        {!! Form::label('endTo', 'End To', ['class' => 'control-label col-sm-1']) !!}
-        <div class="col-sm-4">
-        {!! Form::date('endTo', null, ['class' => 'form-control']) !!}
-        </div>
 </div>
 <div class="col-sm-10"></div>
 <div class="col-sm-2">

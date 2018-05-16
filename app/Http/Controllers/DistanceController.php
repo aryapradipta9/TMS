@@ -96,7 +96,7 @@ class DistanceController extends Controller
         // dd($url);
         $json = json_decode(file_get_contents($url), true);
         // dd($json);
-        $distance['distance'] = $json['routes'][0]['legs'][0]['distance']['value'];
+        $distance['distance'] = $json['routes'][0]['legs'][0]['distance']['value'] / 1000;
         
         // $customer = Request::all();
         // Mail delivery logic goes here

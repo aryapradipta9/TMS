@@ -6,6 +6,7 @@ use App\Routing;
 use App\Customer;
 use App\Order;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RoutingController extends Controller
 {
@@ -42,7 +43,7 @@ class RoutingController extends Controller
                 $namaCust = Customer::where('id', $custid)->value('nama');
                 $last = end($newRouting);
                 // $id = key($newRouting);
-                $last['orderNumber'] = $last['orderNumber'] . ', ' . $namaCust;
+                $last['orderNumber'] = $last['orderNumber'] . ' --> ' . $namaCust;
             }
             
         }
@@ -67,7 +68,7 @@ class RoutingController extends Controller
                 $namaCust = Customer::where('id', $custid)->value('nama');
                 $last = end($newRouting);
                 // $id = key($newRouting);
-                $last['orderNumber'] = $last['orderNumber'] . ', ' . $namaCust;
+                $last['orderNumber'] = $last['orderNumber'] . ' - ' . $namaCust . "\n" . $namaCust;
             }
             
         }
@@ -148,5 +149,27 @@ class RoutingController extends Controller
             }
         }
         return redirect()->route('routing');
+    }
+
+    public function details(Request $request, $id) {
+        $id = (int)$id;
+        $routing = Routing::where('groupId', (int)$id)->get();
+
+        $orderNumberList = [];
+        foreach ($routing as $value) {
+            $orderNumberList = Order::where('id', $value->orderNumber)->get();
+        }
+        foreach ($orderNumberList as $order) {
+            // query
+            $dataCust = Customer::where('id', $order['customer'])->first();
+            $order['customer'] = $dataCust['nama'];
+            $order['kecamatan'] = $dataCust['kecamatan'];
+            $order['kabupaten'] = $dataCust['kabupaten'];
+            $order['provinsi'] = $dataCust['provinsi'];
+            $order['alamat'] = $dataCust['alamat'];
+            $order['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $order['deliveryDate'])->format('d M Y');
+        }
+        $orders = $orderNumberList;
+        return view('orderTable', compact('orders'));
     }
 }

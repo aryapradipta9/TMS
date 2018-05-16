@@ -19,7 +19,7 @@ Database Distance
               <th> No</th>
               <th> Origin</th>
               <th> Destination</th>
-              <th> Distance</th>
+              <th> Distance (km)</th>
           </tr>
       </thead>
       <tbody>

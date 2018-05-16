@@ -6,7 +6,7 @@ Database Routing
 
 @section('additional-header')
 <a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Hapus </a>
-<a class="btn btn-primary" href="{{ route('order') }}" type="button"> Input </a>
+<a class="btn btn-primary" href="{{ route('order-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
@@ -19,25 +19,25 @@ Database Routing
           <tr>
               {{-- <th> </th> --}}
               <th> No</th>
+              <th> SO Number</th>
               <th> Customer</th>
-              <th> T. Jarak</th>
-              <th> T. Berat</th>
-              <th> Deliv Date</th>
-              <th> Keterangan</th>
-              <th> Truck</th>
+              <th> Alamat</th>
+              <th> Kecamatan</th>
+              <th> Kab / Kota</th>
+              <th> Provinsi</th>
           </tr>
       </thead>
       <tbody>
            @foreach($newRouting as $routing)
             <tr>
                 {{-- <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td> --}}
-            <td> <a href="routing/details/{{$routing->groupId}}"><?php echo $id ?></a> </td>
-                <td> {{$routing->orderNumber}} </td>
-                <td> {{$routing->totalJarak}} </td>
-                <td> {{$routing->totalBerat}} </td>
-                <td> {{$routing->deliveryDate}} </td>
-                <td> {{$routing->keterangan}} </td>
-                <td> {{$routing->truck}} </td>
+                <td> <?php echo $id ?> </td>
+                <td> {{$routing->order}} </td>
+                <td> {{$routing->customer}} </td>
+                <td> {{$routing->alamat}} </td>
+                <td> {{$routing->kecamatan}} </td>
+                <td> {{$routing->kabupaten}} </td>
+                <td> {{$routing->provinsi}} </td>
             </tr>
             <?php $id++; ?>
            @endforeach
@@ -52,6 +52,6 @@ Database Routing
       
   </script>
 @else
-  <p> No routing data found..</p>
+  <p> No sales order found..</p>
 @endif
 @endsection

@@ -30,8 +30,7 @@ class ModaReq extends FormRequest
             'quantity'   => 'required|numeric',
             'tonase'     => 'required|numeric',
             'duration'    => 'required|numeric',
-            'startFrom'   => 'required|date',
-            'endTo'     => 'required|date|after_or_equal:startFrom'          
+            'startFrom'   => 'required|date'     
         ];
     }
 }
