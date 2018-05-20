@@ -11,7 +11,6 @@ Database Customer
 
 @section('main-content')
 <?php $id = 1; ?>
-@if($customers->count() > 0)
   <table class="table table-responsive border" id="cust-table">
       <thead>
           <tr>
@@ -50,7 +49,4 @@ Database Customer
     //   });
       
   </script>
-@else
-  <p> No users found..</p>
-@endif
 @endsection

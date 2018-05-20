@@ -20,8 +20,8 @@ Database Routing
               {{-- <th> </th> --}}
               <th> </th>
               <th> Customer</th>
-              <th> T. Jarak</th>
-              <th> T. Berat</th>
+              <th> T. Jarak (km)</th>
+              <th> T. Berat (kg)</th>
               <th> Deliv Date</th>
               <th> Keterangan</th>
               <th> Truck</th>

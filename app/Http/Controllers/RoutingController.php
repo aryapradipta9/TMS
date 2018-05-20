@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Routing;
 use App\Customer;
 use App\Order;
+use App\Moda;
+use App\Vendor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -35,7 +37,10 @@ class RoutingController extends Controller
                 
                 $groupId = $value->groupId;
                 $custid = Order::where('id', $value['orderNumber'])->value('customer');
-                $value['orderNumber'] = Customer::where('id', $custid)->value('nama');
+                $namaWarehouse = Vendor::where('id', Moda::where('id', $value['truck'])->value('vendor'))->value('nama');
+                $value['truck'] = Moda::where('id', $value['truck'])->value('nama');
+                $value['orderNumber'] = $namaWarehouse . ' --> ' . Customer::where('id', $custid)->value('nama');
+                $value['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $value['deliveryDate'])->format('d M Y');
                 $newRouting[] = $value;
                 
             } else {
@@ -60,7 +65,9 @@ class RoutingController extends Controller
                 
                 $groupId = $value->groupId;
                 $custid = Order::where('id', $value['orderNumber'])->value('customer');
+                $value['truck'] = Moda::where('id', $value['truck'])->value('nama');
                 $value['orderNumber'] = Customer::where('id', $custid)->value('nama');
+                $value['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $value['deliveryDate'])->format('d M Y');
                 $newRouting[] = $value;
                 
             } else {
@@ -145,6 +152,8 @@ class RoutingController extends Controller
                 foreach ($listOrder as $order) {
                     Order::where('id', $order->orderNumber)->update(['status' => 0]);
                 }
+                // ambil nomor truk
+                Moda::where('id', $listOrder[0]->truck)->increment('quantity');
                 Routing::where('groupId', $value)->delete();
             }
         }

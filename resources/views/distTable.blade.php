@@ -5,14 +5,17 @@ Database Distance
 @endsection
 
 @section('additional-header')
+@if(count($distances) > 0)
 <a class="btn btn-danger" href="{{ route('dist-showDelete') }}"> Hapus </a>
+@else
+<a class="btn btn-danger" href="{{ route('dist-showDelete') }}" disabled> Hapus </a>
+@endif
 <a class="btn btn-primary" href="{{ route('dist-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
 
 <?php $id = 1; ?>
-@if($distances->count() > 0)
   <table class="table table-responsive border" id="dist-table">
       <thead>
           <tr>
@@ -39,7 +42,4 @@ Database Distance
     //   });
       
   </script>
-@else
-  <p> Tidak ada data jarak </p>
-@endif
 @endsection

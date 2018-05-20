@@ -16,15 +16,15 @@
                       </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active nav-side" href={{route('vendor')}} id="home-click">
+                            Warehouse
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active nav-side" href={{route('customer')}} id="home-click">
                             Customer
                         </a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link active nav-side" href={{route('vendor')}} id="home-click">
-                          Vendor
-                      </a>
-                  </li>
                     <li class="nav-item">
                       <a class="nav-link active nav-side" href={{route('moda')}} id="home-click">
                           Moda transportasi
@@ -45,6 +45,11 @@
                       Route
                   </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link active nav-side" href={{route('history')}} id="home-click">
+                    History
+                </a>
+            </li>
               
                   </ul>
                 

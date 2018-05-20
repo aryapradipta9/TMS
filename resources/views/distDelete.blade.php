@@ -5,14 +5,12 @@ Database Distance
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger"> Hapus </a>
-<a class="btn btn-primary" href="{{ route('dist-form') }}" type="button"> Input </a>
+
 @endsection
 
 @section('main-content')
 
 <?php $id = 1; ?>
-@if($distances->count() > 0)
 {{ Form::open(['route' => 'dist-delete']) }}
   <table class="table table-responsive border" id="dist-table">
       <thead>
@@ -20,7 +18,7 @@ Database Distance
               <th> </th>
               <th> Origin</th>
               <th> Destination</th>
-              <th> Distance</th>
+              <th> Distance (km)</th>
           </tr>
       </thead>
       <tbody>
@@ -42,7 +40,4 @@ Database Distance
     //   });
       
   </script>
-@else
-  <p> Tidak ada data jarak </p>
-@endif
 @endsection

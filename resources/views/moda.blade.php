@@ -13,7 +13,7 @@ Moda
     </div>
 </div>
 <div class="form-group">
-        {!! Form::label('vendor', 'Vendor', ['class' => 'control-label col-sm-2']) !!}
+        {!! Form::label('vendor', 'Warehouse', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-10">
         {!! Form::select('vendor', $vendors, null, ['class' => 'form-control']) !!}
         </div>
@@ -27,8 +27,10 @@ Moda
 <div class="form-group">
         {!! Form::label('quantity', 'Quantity', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-2">
-                        
+                <span class="input-group"> 
         {!! Form::number('quantity', 0, ['class' => 'form-control']) !!}
+        <span class="input-group-addon">unit</span>
+                        </span>
         </div>
 {{-- </div>--}}
 
@@ -36,7 +38,7 @@ Moda
         <div class="col-sm-2">
                         <span class="input-group"> 
         {!! Form::number('tonase', 0, ['class' => 'form-control']) !!}
-        <span class="input-group-addon">Text</span>
+        <span class="input-group-addon">kg</span>
                         </span>
         </div>
 {{-- 

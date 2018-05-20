@@ -28,7 +28,7 @@ class DistanceController extends Controller
     public function index()
     {
 
-        $distances = Distance::all();
+        $distances = Distance::where('origin', '>', 0)->get();
         foreach ($distances as $distance) {
             if ($distance['origin'] < 0) {
                 $distance['origin'] = Vendor::where('id', ($distance['origin'] * (-1) ))->value('nama');
@@ -53,11 +53,9 @@ class DistanceController extends Controller
     public function create()
     {
         $customers = Customer::pluck('nama', 'id')->toArray();
-        $vendors = Vendor::pluck('nama', 'id')->toArray();
+        
         $new = array();
-        foreach($vendors as $key => $vendor) {
-            $customers[$key * (-1)] = $vendor;
-        }
+        
         // $customers = $customers->merge($new);
         // dd($customers);
         return view('dist', compact('customers'));
@@ -81,14 +79,18 @@ class DistanceController extends Controller
             $tempOrigin = $distance['origin'] * (-1);
             $origin = urlencode(Vendor::where('id', $tempOrigin)->value('alamat'));
         } else {
-            $origin = urlencode(Customer::where('id', $distance['origin'])->value('alamat'));
+            $custLoc = Customer::where('id', $distance['origin'])->first();
+            $origin = $custLoc->alamat . ' ' . $custLoc->kecamatan . ' ' . $custLoc->kabupaten . ' ' . $custLoc->provinsi; 
+            $origin = urlencode($origin);
         }
         if ($distance['dest'] < 0) {
             // adalah vendor
             $tempDest = $distance['dest'] * (-1);
             $dest = urlencode(Vendor::where('id', $tempDest)->value('alamat'));
         } else {
-            $dest = urlencode(Customer::where('id', $distance['dest'])->value('alamat'));
+            $custLoc = Customer::where('id', $distance['dest'])->first();
+            $dest = $custLoc->alamat . ' ' . $custLoc->kecamatan . ' ' . $custLoc->kabupaten . ' ' . $custLoc->provinsi; 
+            $dest = urlencode($dest);
         }
         // $origin = urlencode($distance['origin']);
         // $dest = urlencode($distance['dest']);
@@ -141,10 +143,18 @@ class DistanceController extends Controller
     }
 
     public function showDelete() {
-        $distances = Distance::all();
+        $distances = Distance::where('origin', '>', 0)->get();
         foreach ($distances as $distance) {
-            $distance['origin'] = Customer::where('id', $distance['origin'])->value('nama');
-            $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+            if ($distance['origin'] < 0) {
+                $distance['origin'] = Vendor::where('id', ($distance['origin'] * (-1) ))->value('nama');
+            } else {
+                $distance['origin'] = Customer::where('id', $distance['origin'])->value('nama');
+            }
+            if ($distance['dest'] < 0) {
+                $distance['dest'] = Vendor::where('id', ($distance['dest'] * (-1) ))->value('nama');
+            } else {
+                $distance['dest'] = Customer::where('id', $distance['dest'])->value('nama');
+            }
         }
         
         return view('distDelete', compact('distances'));

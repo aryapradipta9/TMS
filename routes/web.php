@@ -61,6 +61,10 @@ Route::post('/distance/delete', 'DistanceController@destroy')->name('dist-delete
 
 Route::get('/order', 'OrderController@index')->name('order');
 
+Route::get('/order/delete', 'OrderController@showDelete')->name('order-showDelete');
+
+Route::post('/order/delete', 'OrderController@destroy')->name('order-delete');
+
 Route::get('/order/add', 'OrderController@create')->name('order-form');
 
 Route::post('/order/add', 'OrderController@store')->name('order-add');
@@ -78,3 +82,5 @@ Route::get('/routing/delete', 'RoutingController@showDelete')->name('routing-sho
 Route::post('/routing/delete', 'RoutingController@destroy')->name('routing-delete');
 
 Route::get('/routing/details/{id}', 'RoutingController@details')->name('routing-details');
+
+Route::get('/history', 'HistoryController@index')->name('history');

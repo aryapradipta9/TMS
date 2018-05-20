@@ -1,16 +1,11 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Routing
+Database History Routing
 @endsection
 
 @section('additional-header')
-@if(count($newRouting) > 0)
-<a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Hapus </a>
-@else
-<a class="btn btn-danger" href="{{ route('routing-showDelete')}}" disabled> Hapus </a>
-@endif
-<a class="btn btn-primary" href="{{ route('order') }}" type="button"> Input </a>
+
 @endsection
 
 @section('main-content')
@@ -34,7 +29,7 @@ Database Routing
            @foreach($newRouting as $routing)
             <tr>
                 {{-- <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td> --}}
-            <td> <a href="routing/details/{{$routing->groupId}}"><?php echo $id ?></a> </td>
+            <td><?php echo $id ?></td>
                 <td> {{$routing->orderNumber}} </td>
                 <td> {{$routing->totalJarak}} </td>
                 <td> {{$routing->totalBerat}} </td>

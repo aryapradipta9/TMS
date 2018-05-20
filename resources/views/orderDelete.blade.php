@@ -13,7 +13,7 @@ Database Sales Order
 
 @if($orders->count() > 0)
 <?php $id = 1; ?>
-{{ Form::open(['route' => 'order-select', 'class' => "form-horizontal"]) }}
+{{ Form::open(['route' => 'order-delete', 'class' => "form-horizontal"]) }}
   <table class="table table-responsive border" id="order-table">
       <thead>
           <tr>
@@ -25,8 +25,8 @@ Database Sales Order
               <th> Kecamatan</th>
               <th> Kab / Kota</th>
               <th> Provinsi</th>
-              <th> Quantity</th>
-              <th> Berat</th>
+              <th> Quantity (unit)</th>
+              <th> Berat (kg)</th>
               <th> Date</th>
               <th> Keterangan</th>
               <th> Status</th>
@@ -41,7 +41,7 @@ Database Sales Order
                     @endif
                 </td>
                 <td> <?php echo $id ?> </td>
-                <td> {{$order->orderNumber}} </td>
+                <td> SO_{{$order->orderNumber}} </td>
                 <td> {{$order->customer}} </td>
                 <td> {{$order->alamat}} </td>
                 <td> {{$order->kecamatan}} </td>

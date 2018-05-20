@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Vendor
+Database Warehouse
 @endsection
 
 @section('additional-header')

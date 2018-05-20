@@ -5,13 +5,16 @@ Database Sales Order
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger"> Hapus </a>
+@if($orders->count() > 0)
+<a class="btn btn-danger" href="{{ route('order-showDelete')}}"> Hapus </a>
+@else
+<a class="btn btn-danger" disabled> Hapus </a>
+@endif
 <a class="btn btn-primary" href="{{ route('order-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
 
-@if($orders->count() > 0)
 <?php $id = 1; ?>
 {{ Form::open(['route' => 'order-select', 'class' => "form-horizontal"]) }}
   <table class="table table-responsive border" id="order-table">
@@ -25,8 +28,8 @@ Database Sales Order
               <th> Kecamatan</th>
               <th> Kab / Kota</th>
               <th> Provinsi</th>
-              <th> Quantity</th>
-              <th> Berat</th>
+              <th> Quantity (unit)</th>
+              <th> Berat (kg)</th>
               <th> Date</th>
               <th> Keterangan</th>
               <th> Status</th>
@@ -41,7 +44,7 @@ Database Sales Order
                     @endif
                 </td>
                 <td> <?php echo $id ?> </td>
-                <td> {{$order->orderNumber}} </td>
+                <td> SO_{{$order->orderNumber}} </td>
                 <td> {{$order->customer}} </td>
                 <td> {{$order->alamat}} </td>
                 <td> {{$order->kecamatan}} </td>
@@ -77,7 +80,4 @@ Database Sales Order
     //   });
       
   </script>
-@else
-  <p> No sales order found..</p>
-@endif
 @endsection

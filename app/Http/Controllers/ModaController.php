@@ -7,6 +7,7 @@ use App\Vendor;
 use App\Customer;
 use App\Order;
 use App\Routing;
+use App\History;
 use Illuminate\Http\Request;
 use App\Http\Requests\ModaReq;
 use App\Distance;
@@ -33,7 +34,7 @@ class ModaController extends Controller
      */
     public function index()
     {
-        $modas = Moda::where('quantity', '>', 0)->get();
+        $modas = Moda::all();
         
         foreach ($modas as $value) {
             $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
@@ -76,23 +77,61 @@ class ModaController extends Controller
     public function select(Request $request)
     {
         $dummy = Session::get('list')->toArray(); // ambil seluruh order
-        $totalTonase = 0;
-        foreach ($dummy as $orderId) {
-            $totalTonase += Order::where('id', $orderId)->value('berat');
-        }
+        
 
         $selection = $request->get('pickModa');
         // ambil lokasi vendor
         $namaModa = Moda::where('id', $selection)->first();
+
+        $totalTonase = 0;
+        foreach ($dummy as $orderId) {
+            $order = Order::where('id', $orderId)->first();
+            $totalTonase += $order->berat;
+            $custid = Customer::where('id', $order->customer)->value('id');
+            // pastikan seluruh alamat dari cust ada jarak lgsg dr vendor
+            if (Distance::where([
+                ['origin', $namaModa->vendor * (-1)],
+                ['dest', $custid]
+            ])->doesntExist()) {
+                $distance = [];
+                $distance['origin'] = $namaModa->vendor * (-1);
+                $distance['dest'] = $custid;
+                if ($distance['origin'] < 0) {
+                    // adalah vendor
+                    $tempOrigin = $distance['origin'] * (-1);
+                    $origin = urlencode(Vendor::where('id', $tempOrigin)->value('alamat'));
+                } else {
+                }
+                if ($distance['dest'] < 0) {
+                } else {
+                    $custLoc = Customer::where('id', $distance['dest'])->first();
+                    $dest = $custLoc->alamat . ' ' . $custLoc->kecamatan . ' ' . $custLoc->kabupaten . ' ' . $custLoc->provinsi; 
+                    $dest = urlencode($dest);
+                }
+                // $origin = urlencode($distance['origin']);
+                // $dest = urlencode($distance['dest']);
+                $url = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyB9RTBNGIx12uQTs3OhOjNUUhN6K8i_GvU&origin=' . $origin . '&destination=' . $dest;
+                // dd($url);
+                $json = json_decode(file_get_contents($url), true);
+                // dd($url);
+                $distance['distance'] = $json['routes'][0]['legs'][0]['distance']['value'] / 1000;
+                
+                // $customer = Request::all();
+                // Mail delivery logic goes here
+
+                Distance::create($distance);
+            }
+        }
         
-        if ($namaModa->tonase < $totalTonase) { // mobil saat ini tidak bisa menampung
+        if (($namaModa->tonase < $totalTonase) && ($request->force == 0)) { // mobil saat ini tidak bisa menampung
             $otherTruck = Moda::where([
                 ['tonase', '>=', $totalTonase],
                 ['quantity', '>', 0]
             ])->get();
             if ($otherTruck->count() > 0) {
                 // kasitau kl ada mobil lain yg bisa nampung
-                $request->session()->flash('alert-route', "Ada mobil yang bisa menampung");
+                $request->session()->flash('alert-route', "Ada mobil lain yang bisa menampung. Lanjutkan?");
+                $request->session()->flash('prev-number', $selection);
                 return redirect()->route('moda-show');
             }
         }
@@ -108,6 +147,9 @@ class ModaController extends Controller
        
         $alamat = $namaModa->vendor * (-1);
         
+        
+
+
         // $alamat = Vendor::where('nama', $namaModa->vendor)->value('alamat');
         
         // query jarak terdekat dari vendor
@@ -187,6 +229,11 @@ class ModaController extends Controller
             $routing['groupId'] = $groupId;
 
             Routing::create($routing);
+
+            $groupId = History::max('groupId');
+            $groupId = isset($groupId) ? $groupId + 1 : 1;
+            $routing['groupId'] = $groupId;
+            History::create($routing);
         }
         return redirect()->route('routing');
     }

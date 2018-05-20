@@ -1,17 +1,20 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Vendor
+Database Warehouse
 @endsection
 
 @section('additional-header')
+@if($vendors->count() > 0)
 <a class="btn btn-danger" href="{{ route('vendor-showDelete')}}"> Hapus </a>
+@else
+<a class="btn btn-danger" href="{{ route('vendor-showDelete')}}" disabled> Hapus </a>
+@endif
 <a class="btn btn-primary" href="{{ route('vendor-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
 <?php $id = 1; ?>
-@if($vendors->count() > 0)
   <table class="table table-responsive" id="vendor-table">
       <thead>
           <tr>
@@ -42,7 +45,4 @@ Database Vendor
     //   });
       
   </script>
-@else
-  <p> No vendor found..</p>
-@endif
 @endsection

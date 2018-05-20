@@ -13,17 +13,17 @@ Database Moda Transportasi
 
 @if($modas->count() > 0)
 <?php $id = 1; ?>
-{{ Form::open(['route' => 'moda-select', 'class' => "form-horizontal"]) }}
+{{ Form::open(['route' => 'moda-select', 'class' => "form-horizontal", 'id' => 'formModa']) }}
   <table class="table table-responsive border" id="moda-table">
       <thead>
           <tr>
               <th> </th>
               <th> No</th>
               <th> Nama</th>
-              <th> Vendor</th>
+              <th> Warehouse</th>
               <th> Contact</th>
-              <th> Quantity</th>
-              <th> Tonase</th>
+              <th> Quantity (unit)</th>
+              <th> Tonase (kg)</th>
               <th> Duration</th>
               <th> Start From</th>
               <th> End To</th>
@@ -34,8 +34,12 @@ Database Moda Transportasi
            @foreach($modas as $moda)
             <tr>
                 <td>                     
-                    @if ($moda->quantity > 0) 
-                        {{ Form::radio('pickModa', $moda->id) }}
+                    @if ($moda->quantity > 0)
+                        @if ((Session::has('prev-number')) and (Session::get('prev-number') == $moda->id))
+                            {{ Form::radio('pickModa', $moda->id, true) }}
+                        @else
+                            {{ Form::radio('pickModa', $moda->id) }}
+                        @endif
                         @endif
                          </td>
                 <td> <?php echo $id ?> </td>
@@ -63,14 +67,20 @@ Database Moda Transportasi
            @endforeach
      </tbody>
   </table>
+  {{ Form::hidden('force', 0, ['id' => 'force']) }}
   {{ Form::submit('Submit', ['class' => 'btn btn-info']) }}</div>
   {{ Form::close() }}
   <script>
     //   $(document).ready(function() {
         $('#moda-table').dynatable();
         @if (Session::has('alert-route'))
-        var temp = '{{ Session::get('alert-route') }}'
-        alert(temp);
+            var temp = '{{ Session::get('alert-route') }}'
+            var hwehwe = {{ Session::get('prev-number') }};
+            var r = confirm(temp);
+            if (r == true) {
+                document.getElementById('force').value = 1;
+                document.getElementById('formModa').submit();
+            }
             // alert("\'" +  {{ Session::get('alert-route') }});
         @endif
     //   });

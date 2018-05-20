@@ -129,8 +129,28 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                Order::where('id', $value)->delete();
+            }
+        }
+        return redirect()->route('order');
+    }
+
+    public function showDelete() {
+        $orders = Order::all();
+        foreach ($orders as $order) {
+            // query
+            $dataCust = Customer::where('id', $order['customer'])->first();
+            $order['customer'] = $dataCust['nama'];
+            $order['kecamatan'] = $dataCust['kecamatan'];
+            $order['kabupaten'] = $dataCust['kabupaten'];
+            $order['provinsi'] = $dataCust['provinsi'];
+            $order['alamat'] = $dataCust['alamat'];
+            $order['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $order['deliveryDate'])->format('d M Y');
+        }
+        return view('orderDelete', compact('orders'));
     }
 }
