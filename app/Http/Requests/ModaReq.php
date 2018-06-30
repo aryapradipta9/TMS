@@ -27,10 +27,10 @@ class ModaReq extends FormRequest
             'nama'    => 'required',
             'vendor'    => 'required',
             'contact'    => 'required',
-            'quantity'   => 'required|numeric',
+            'plat' => 'required',
             'tonase'     => 'required|numeric',
-            'duration'    => 'required|numeric',
-            'startFrom'   => 'required|date'     
+            'duration'    => 'numeric',
+            'startFrom'   => 'date'     
         ];
     }
 }

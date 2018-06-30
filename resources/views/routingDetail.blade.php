@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Routing
+Tabel Routing
 @endsection
 
 @section('additional-header')

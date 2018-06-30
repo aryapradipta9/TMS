@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Warehouse
+Tabel Warehouse
 @endsection
 
 @section('additional-header')
@@ -10,7 +10,9 @@ Database Warehouse
 @else
 <a class="btn btn-danger" href="{{ route('vendor-showDelete')}}" disabled> Hapus </a>
 @endif
+
 <a class="btn btn-primary" href="{{ route('vendor-form') }}" type="button"> Input </a>
+
 @endsection
 
 @section('main-content')

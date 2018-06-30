@@ -28,7 +28,7 @@ class DistanceController extends Controller
     public function index()
     {
 
-        $distances = Distance::where('origin', '>', 0)->get();
+        $distances = Distance::all();
         foreach ($distances as $distance) {
             if ($distance['origin'] < 0) {
                 $distance['origin'] = Vendor::where('id', ($distance['origin'] * (-1) ))->value('nama');
@@ -53,9 +53,11 @@ class DistanceController extends Controller
     public function create()
     {
         $customers = Customer::pluck('nama', 'id')->toArray();
-        
+        $vendors = Vendor::pluck('nama', 'id')->toArray();
         $new = array();
-        
+        foreach ($vendors as $key => $vendor) {
+            $customers[$key * (-1)] = $vendor;
+        }
         // $customers = $customers->merge($new);
         // dd($customers);
         return view('dist', compact('customers'));
@@ -143,7 +145,7 @@ class DistanceController extends Controller
     }
 
     public function showDelete() {
-        $distances = Distance::where('origin', '>', 0)->get();
+        $distances = Distance::all();
         foreach ($distances as $distance) {
             if ($distance['origin'] < 0) {
                 $distance['origin'] = Vendor::where('id', ($distance['origin'] * (-1) ))->value('nama');

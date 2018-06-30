@@ -15,22 +15,12 @@ class CreateHistoriesTable extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('orderNumber');
+            $table->string('rute');
             $table->unsignedInteger('totalJarak');
             $table->unsignedInteger('totalBerat');
             $table->date('deliveryDate');
             $table->string('keterangan');
-            $table->unsignedInteger('truck');
-            $table->unsignedInteger('groupId');
-
-            $table->foreign('orderNumber')
-                ->references('id')
-                ->on('orders')
-                ->onDelete('cascade');
-            $table->foreign('truck')
-                ->references('id')
-                ->on('modas')
-                ->onDelete('cascade');
+            $table->string('namaTruck');
         });
     }
 

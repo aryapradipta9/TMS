@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Sales Order
+Tabel Sales Order
 @endsection
 
 @section('additional-header')
@@ -26,8 +26,8 @@ Database Sales Order
               <th> Kab / Kota</th>
               <th> Provinsi</th>
               <th> Quantity (unit)</th>
-              <th> Berat (kg)</th>
-              <th> Date</th>
+              <th> Volume (cm<sup>3</sup>) </th>
+              <th> SO Date</th>
               <th> Keterangan</th>
               <th> Status</th>
           </tr>
@@ -53,16 +53,10 @@ Database Sales Order
                 <td> {{$order->keterangan}} </td>
                 <td> 
                     @if($order->status == 1)
-                        <label class="switch">
-                           <input type="checkbox" checked disabled>
-                           <span class="slider round"></span>
-                       </label>
-                       @else
-                       <label class="switch">
-                           <input type="checkbox" disabled>
-                           <span class="slider round"></span>
-                       </label>
-                       @endif
+                    In Delivery
+                   @else
+                  Outstanding
+                   @endif
                 </td>
             </tr>
             <?php $id++; ?>

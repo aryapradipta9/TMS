@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Distance
+Tabel Distance
 @endsection
 
 @section('additional-header')

@@ -65,8 +65,9 @@ class RoutingController extends Controller
                 
                 $groupId = $value->groupId;
                 $custid = Order::where('id', $value['orderNumber'])->value('customer');
+                $namaWarehouse = Vendor::where('id', Moda::where('id', $value['truck'])->value('vendor'))->value('nama');
                 $value['truck'] = Moda::where('id', $value['truck'])->value('nama');
-                $value['orderNumber'] = Customer::where('id', $custid)->value('nama');
+                $value['orderNumber'] = $namaWarehouse . ' --> ' . Customer::where('id', $custid)->value('nama');
                 $value['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $value['deliveryDate'])->format('d M Y');
                 $newRouting[] = $value;
                 
@@ -75,10 +76,11 @@ class RoutingController extends Controller
                 $namaCust = Customer::where('id', $custid)->value('nama');
                 $last = end($newRouting);
                 // $id = key($newRouting);
-                $last['orderNumber'] = $last['orderNumber'] . ' - ' . $namaCust . "\n" . $namaCust;
+                $last['orderNumber'] = $last['orderNumber'] . ' --> ' . $namaCust;
             }
             
         }
+        
         return view('routingDelete', compact('newRouting'));
     }
 
@@ -150,7 +152,7 @@ class RoutingController extends Controller
                 $listOrder = Routing::where('groupId', $value)->get();
                 // dd($listRoute);
                 foreach ($listOrder as $order) {
-                    Order::where('id', $order->orderNumber)->update(['status' => 0]);
+                    Order::where('id', $order->orderNumber)->update(['status' => 2]);
                 }
                 // ambil nomor truk
                 Moda::where('id', $listOrder[0]->truck)->increment('quantity');

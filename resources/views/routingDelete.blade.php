@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Routing
+Tabel Routing
 @endsection
 
 @section('additional-header')
@@ -21,9 +21,9 @@ Database Routing
               <th> </th>
               <th> Customer</th>
               <th> T. Jarak (km)</th>
-              <th> T. Berat (kg)</th>
+              <th> T. Volume (cm<sup>3</sup>)</th>
               <th> Deliv Date</th>
-              <th> Keterangan</th>
+              
               <th> Truck</th>
           </tr>
       </thead>
@@ -36,7 +36,7 @@ Database Routing
                 <td> {{$routing->totalJarak}} </td>
                 <td> {{$routing->totalBerat}} </td>
                 <td> {{$routing->deliveryDate}} </td>
-                <td> {{$routing->keterangan}} </td>
+                
                 <td> {{$routing->truck}} </td>
             </tr>
             <?php $id++; ?>

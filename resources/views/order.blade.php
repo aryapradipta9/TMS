@@ -33,16 +33,16 @@ Sales Order
         </div>
 {{-- </div>
 <div class="form-group"> --}}
-        {!! Form::label('berat', 'Berat', ['class' => 'control-label col-sm-2']) !!}
+        {!! Form::label('berat', 'Volume', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-4">
                 <span class="input-group"> 
         {!! Form::number('berat', 0, ['class' => 'form-control']) !!}
-        <span class="input-group-addon">kg</span>
+        <span class="input-group-addon">cm<sup>3</sup></span>
                         </span>
         </div>
 </div>
 <div class="form-group">
-        {!! Form::label('deliveryDate', 'Delivery Date', ['class' => 'control-label col-sm-2']) !!}
+        {!! Form::label('deliveryDate', 'SO Date', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-4">
         {!! Form::date('deliveryDate', null, ['class' => 'form-control']) !!}
         </div>

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database History Routing
+Tabel History Routing
 @endsection
 
 @section('additional-header')
@@ -26,16 +26,16 @@ Database History Routing
           </tr>
       </thead>
       <tbody>
-           @foreach($newRouting as $routing)
+           @foreach($history as $routing)
             <tr>
                 {{-- <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td> --}}
             <td><?php echo $id ?></td>
-                <td> {{$routing->orderNumber}} </td>
+                <td> {{$routing->rute}} </td>
                 <td> {{$routing->totalJarak}} </td>
                 <td> {{$routing->totalBerat}} </td>
                 <td> {{$routing->deliveryDate}} </td>
                 <td> {{$routing->keterangan}} </td>
-                <td> {{$routing->truck}} </td>
+                <td> {{$routing->namaTruck}} </td>
             </tr>
             <?php $id++; ?>
            @endforeach

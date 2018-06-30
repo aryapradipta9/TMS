@@ -17,11 +17,12 @@ class CreateModasTable extends Migration
             $table->increments('id');
             $table->string('nama');
             $table->unsignedInteger('vendor');
+            $table->string('plat');
             $table->bigInteger('quantity')->unsigned();
             $table->bigInteger('tonase')->unsigned();
-            $table->integer('duration')->unsigned();
-            $table->date('startFrom');
-            $table->date('endTo');
+            $table->integer('duration')->unsigned()->nullable();
+            $table->date('startFrom')->nullable();
+            $table->date('endTo')->nullable();
             $table->char('status');
             $table->string('contact');
             

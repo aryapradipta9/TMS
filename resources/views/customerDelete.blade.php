@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('judul-halaman')
-Database Customer
+Tabel Customer
 @endsection
 
 @section('additional-header')

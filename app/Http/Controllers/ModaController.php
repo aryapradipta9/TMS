@@ -41,6 +41,13 @@ class ModaController extends Controller
             $value['duration'] .= ' hari';
             $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
             $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+            $dateNow = Carbon::now();
+            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+               $value['quantity'] = 0;
+            }
+            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                $value['quantity'] = 0;
+            }
         }
         
         return view('modaTable', compact('modas'));
@@ -61,14 +68,36 @@ class ModaController extends Controller
     {
         $modas = Moda::all();
         foreach ($modas as $value) {
-            $value['vendor'] = Vendor::where('id', $value['vendor'])->value('nama');
+            $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
+            $value['duration'] .= ' hari';
+            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+            $dateNow = Carbon::now();
+            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+               $value['quantity'] = 0;
+            }
+            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                $value['quantity'] = 0;
+            }
         }
         return view('modaSelect', compact('modas'));
     }
 
     public function showDelete() {
         $modas = Moda::all();
-        
+        foreach ($modas as $value) {
+            $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
+            $value['duration'] .= ' hari';
+            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+            $dateNow = Carbon::now();
+            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+               $value['quantity'] = 0;
+            }
+            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                $value['quantity'] = 0;
+            }
+        }
         
         return view('modaDelete', compact('modas'));
     }
@@ -177,46 +206,56 @@ class ModaController extends Controller
             }
             
             $originList = [];
-            
+            // buang data yg sizenya lebih besar dari truk
+            $temp = [];
             foreach ($dummy as $dumm) {
                 // ambil data tujuan dari order
-                $idTujuan = Order::where('id', $dumm)->value('customer');
-                $originList[$dumm] = isset($list[$idTujuan]) ? $list[$idTujuan] : 999999999;
+                $dataOrder = Order::where('id', (int)$dumm)->first();
+                $temp[] = $dataOrder;
+                if ($dataOrder->berat <= $tonase ){
+                    $idTujuan = $dataOrder->customer;
+                    
+                    $originList[$dumm] = isset($list[$idTujuan]) ? $list[$idTujuan] : 999999999;
+                    
+                }
             }
-            asort($originList);
-            // ambil elemen pertama
-            reset($originList);
-            $nextDest = key($originList);
-            $totalJarak = $totalJarak + $originList[$nextDest];
             
-            $order = Order::where('id', $nextDest)->first();
-            
-            // nextDest adalah id dari tujuan selanjutnya
-            // var_dump($order);
-            // 
-            $orderTonase = $order->berat;
-            
-            if ($tonase < $orderTonase) {
+            if (count($originList) == 0) {
                 $end = true;
             } else {
-                $debug[] = $nextDest;
-                $i++;
+                asort($originList);
+                // ambil elemen pertama
+                reset($originList);
+                $nextDest = key($originList);
                 
-                // masukkan ke database;
-                $order->status = 1;
-                $order->save();
-                $tonase = $tonase - $orderTonase;
-                // $alamat = Customer::where('nama', $order->customer)->value('kecamatan');
-                $alamat = $order->customer;
-                array_splice($dummy, array_search($nextDest, $dummy), 1);
-                // dd($dummy);
+                $order = Order::where('id', $nextDest)->first();
+                
+                // nextDest adalah id dari tujuan selanjutnya
+                 
+                $orderTonase = $order->berat;
+                
+                if ($tonase < $orderTonase) {
+                    $end = true;
+                } else {
+                    $debug[] = $nextDest;
+                    $i++;
+                    $totalJarak = $totalJarak + $originList[$nextDest];
+                
+                    // masukkan ke database;
+                    $order->status = 1;
+                    $order->save();
+                    $tonase = $tonase - $orderTonase;
+                    $alamat = $order->customer;
+                    array_splice($dummy, array_search($nextDest, $dummy), 1);
+                }
             }
-            
         }
         $tonase = $namaModa->tonase - $tonase;
         $namaModa->quantity = $namaModa->quantity - 1;
         $namaModa->save();
-
+        $history = [];
+        // dd($value);
+        $iteration = 0;
         foreach ($debug as $value) {
             $order = Order::where('id', $value)->first();
             $routing = [];
@@ -224,17 +263,39 @@ class ModaController extends Controller
             $routing['totalJarak'] = $totalJarak;
             $routing['totalBerat'] = $tonase;
             $routing['deliveryDate'] = Carbon::now();
-            $routing['keterangan'] = 'ini keterangan';
+            $routing['keterangan'] = $order->keterangan;
             $routing['truck'] = $namaModa->id;
             $routing['groupId'] = $groupId;
 
             Routing::create($routing);
+            
+            if ($iteration == 0) {
+                $namaWarehouse = Vendor::where('id', Moda::where('id', $routing['truck'])->value('vendor'))->value('nama');
+                $history['rute'] = $namaWarehouse . ' --> ' . Customer::where('id', Order::where('id', $value)->value('customer'))->value('nama');
+                $history['totalJarak'] = $totalJarak;
+                $history['totalBerat'] = $tonase;
+                $history['deliveryDate'] = Carbon::now();
+                $history['keterangan'] = $order->keterangan;
+                $history['namaTruck'] = Moda::where('id', $namaModa->id)->value('nama');
+                
+            } else {
+                $namaCust = Customer::where('id', Order::where('id', $value)->value('customer'))->value('nama');
+                $history['rute'] = $history['rute'] . ' --> ' . $namaCust;
+            }
 
-            $groupId = History::max('groupId');
-            $groupId = isset($groupId) ? $groupId + 1 : 1;
-            $routing['groupId'] = $groupId;
-            History::create($routing);
+            // $groupId2 = History::max('groupId');
+            // $groupId2 = isset($groupId2) ? $groupId2 + 1 : 1;
+            // $routing['groupId'] = $groupId2;
+            // History::create($routing);
+
+            $iteration += 1;
         }
+        // dd($history);
+        if (count($history) > 0) History::create($history);
+
+        // lakukan pengisian history
+
+
         return redirect()->route('routing');
     }
 
@@ -252,7 +313,8 @@ class ModaController extends Controller
         $moda['nama'] = $request['nama'];
         $moda['vendor'] = $request['vendor'];
         $moda['contact'] = $request['contact'];
-        $moda['quantity'] = $request['quantity'];
+        $moda['plat'] = $request['plat'];
+        $moda['quantity'] = 1;
         $moda['tonase'] = $request['tonase'];
         $moda['duration'] = $request['duration'];
         $moda['startFrom'] = $request['startFrom'];

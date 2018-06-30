@@ -25,20 +25,19 @@ Moda
         </div>
 </div>
 <div class="form-group">
-        {!! Form::label('quantity', 'Quantity', ['class' => 'control-label col-sm-2']) !!}
+        {!! Form::label('plat', 'Plat Nomor', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-2">
                 <span class="input-group"> 
-        {!! Form::number('quantity', 0, ['class' => 'form-control']) !!}
-        <span class="input-group-addon">unit</span>
-                        </span>
+        {!! Form::text('plat', 0, ['class' => 'form-control']) !!}
+        
         </div>
 {{-- </div>--}}
 
-        {!! Form::label('tonase', 'Tonase', ['class' => 'control-label col-sm-1']) !!}
+        {!! Form::label('tonase', 'Volume Karoseri', ['class' => 'control-label col-sm-1']) !!}
         <div class="col-sm-2">
                         <span class="input-group"> 
         {!! Form::number('tonase', 0, ['class' => 'form-control']) !!}
-        <span class="input-group-addon">kg</span>
+        <span class="input-group-addon">cm<sup>3</sup></span>
                         </span>
         </div>
 {{-- 

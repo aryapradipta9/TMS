@@ -59,7 +59,7 @@
 
       
               <main role="main" class="col-md-12 ml-sm-auto col-lg-11 pt-3 px-4">
-                  {{-- <h3 style="margin-top:15px; margin-left:5%;margin-bottom:22px">Database Customer</h3> --}}
+                  {{-- <h3 style="margin-top:15px; margin-left:5%;margin-bottom:22px">Tabel Customer</h3> --}}
                     @yield('main-content')
               </main>
             
