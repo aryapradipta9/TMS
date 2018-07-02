@@ -5,13 +5,18 @@ Tabel Routing
 @endsection
 
 @section('additional-header')
-<a class="btn btn-danger"> Hapus </a>
+@if(count($newRouting) > 0)
+<a class="btn btn-danger" href="{{ route('routing-showDeliv')}}"> Delivered </a>
+<a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Hapus </a>
+@else
+<a class="btn btn-danger" href="{{ route('routing-showDeliv')}}" disabled> Delivered </a>
+<a class="btn btn-danger" href="{{ route('routing-showDelete')}}" disabled> Hapus </a>
+@endif
 <a class="btn btn-primary" href="{{ route('order-form') }}" type="button"> Input </a>
 @endsection
 
 @section('main-content')
 
-@if(count($newRouting) > 0)
 <?php $id = 1; ?>
 {{ Form::open(['route' => 'routing-delete', 'class' => "form-horizontal"]) }}
   <table class="table table-responsive border" id="order-table">
@@ -51,7 +56,4 @@ Tabel Routing
     //   });
       
   </script>
-@else
-  <p> No sales order found..</p>
-@endif
-@endsection
+  @endsection

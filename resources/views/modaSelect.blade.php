@@ -64,21 +64,35 @@ Tabel Moda Transportasi
   {{ Form::hidden('force', 0, ['id' => 'force']) }}
   {{ Form::submit('Submit', ['class' => 'btn btn-info']) }}</div>
   {{ Form::close() }}
+  
+    @if (Session::has('alert-route'))
+        <div id="dialog-confirm" title="Empty the recycle bin?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Ada moda yang dapat menampung.</p>
+        </div>
+        <script>
+            $( function() {
+              $( "#dialog-confirm" ).dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                  "Lanjutkan": function() {
+                    $( this ).dialog( "close" );
+                    document.getElementById('force').value = 1;
+                    document.getElementById('formModa').submit();
+                  },
+                  "Ganti": function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              });
+            } );
+        </script>
+    @endif
+  
   <script>
-    //   $(document).ready(function() {
         $('#moda-table').dynatable();
-        @if (Session::has('alert-route'))
-            var temp = '{{ Session::get('alert-route') }}'
-            var hwehwe = {{ Session::get('prev-number') }};
-            var r = confirm(temp);
-            if (r == true) {
-                document.getElementById('force').value = 1;
-                document.getElementById('formModa').submit();
-            }
-            // alert("\'" +  {{ Session::get('alert-route') }});
-        @endif
-    //   });
-      
   </script>
 @else
   <p> No moda transportasi found..</p>

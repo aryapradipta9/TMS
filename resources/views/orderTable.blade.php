@@ -39,7 +39,7 @@ Tabel Sales Order
            @foreach($orders as $order)
             <tr>
                 <td>
-                    @if ($order->status != 1) 
+                    @if ($order->status == 0) 
                     {{ Form::checkbox('pick[]', $order->id, false) }} 
                     @endif
                 </td>
@@ -58,7 +58,11 @@ Tabel Sales Order
                     @if($order->status == 1)
                         In Delivery
                        @else
+                       @if ($order->status == 0)
                       Outstanding
+                      @else
+                      Delivered
+                      @endif
                        @endif
                 </td>
             </tr>

@@ -3,8 +3,8 @@
 @section('content')
 <div class="container-fluid" style="height:100%; min-height:100%;">
   <div class="row">
-    <div class="col-md-10"><h2 style="margin-top:15px;">@yield('judul-halaman')</h2></div>
-    <div class="col-md-2" style="margin-top:15px; margin-bottom:20px;">@yield('additional-header')</div>
+    <div class="col-md-9"><h2 style="margin-top:15px; display: inline;">@yield('judul-halaman')</h2>@yield('selectBar')</div>
+    <div class="col-md-3 text-right" style="margin-top:15px; margin-bottom:20px; float:right !important">@yield('additional-header')</div>
   </div>
 <div class="row" style="height:100%; min-height:100%;">  
         <nav class="col-md-1 d-none d-md-block bg-light sidebar" id="navigation-panel" style="padding-left:0px; padding-right:0px; height:100%; min-height:100%;background-color: rgba(0, 0, 0, .10);">

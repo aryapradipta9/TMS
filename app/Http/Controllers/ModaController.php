@@ -38,16 +38,24 @@ class ModaController extends Controller
         
         foreach ($modas as $value) {
             $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
-            $value['duration'] .= ' hari';
-            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
-            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
-            $dateNow = Carbon::now();
-            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
-               $value['quantity'] = 0;
-            }
-            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+            if ((isset($value['duration'])) && (isset($value['startFrom']))){
+                $value['duration'] .= ' hari';
+                $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+                $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+                $dateNow = Carbon::now();
+                if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+                if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+            } else {
+                $value['duration'] = "-";
+                $value['startFrom'] = '-';
+                $value['endTo'] = '-';
                 $value['quantity'] = 0;
             }
+            
         }
         
         return view('modaTable', compact('modas'));
@@ -69,14 +77,21 @@ class ModaController extends Controller
         $modas = Moda::all();
         foreach ($modas as $value) {
             $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
-            $value['duration'] .= ' hari';
-            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
-            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
-            $dateNow = Carbon::now();
-            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
-               $value['quantity'] = 0;
-            }
-            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+            if ((isset($value['duration'])) && (isset($value['startFrom']))){
+                $value['duration'] .= ' hari';
+                $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+                $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+                $dateNow = Carbon::now();
+                if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+                if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+            } else {
+                $value['duration'] = "-";
+                $value['startFrom'] = '-';
+                $value['endTo'] = '-';
                 $value['quantity'] = 0;
             }
         }
@@ -87,14 +102,21 @@ class ModaController extends Controller
         $modas = Moda::all();
         foreach ($modas as $value) {
             $value->vendor = Vendor::where('id', $value->vendor)->value('nama');
-            $value['duration'] .= ' hari';
-            $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
-            $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
-            $dateNow = Carbon::now();
-            if (Carbon::parse($value['endTo'])->lt($dateNow)) {
-               $value['quantity'] = 0;
-            }
-            if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+            if ((isset($value['duration'])) && (isset($value['startFrom']))){
+                $value['duration'] .= ' hari';
+                $value['startFrom'] = Carbon::createFromFormat('Y-m-d', $value['startFrom'])->format('d M Y');
+                $value['endTo'] = Carbon::createFromFormat('Y-m-d', $value['endTo'])->format('d M Y');
+                $dateNow = Carbon::now();
+                if (Carbon::parse($value['endTo'])->lt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+                if (Carbon::parse($value['startFrom'])->gt($dateNow)) {
+                    $value['quantity'] = 0;
+                }
+            } else {
+                $value['duration'] = "-";
+                $value['startFrom'] = '-';
+                $value['endTo'] = '-';
                 $value['quantity'] = 0;
             }
         }
@@ -307,37 +329,33 @@ class ModaController extends Controller
      */
     public function store(ModaReq $modareq)
     {
+        
         $request = $modareq->validated();
+        
         $moda = [];
-
+        
         $moda['nama'] = $request['nama'];
         $moda['vendor'] = $request['vendor'];
         $moda['contact'] = $request['contact'];
         $moda['plat'] = $request['plat'];
         $moda['quantity'] = 1;
         $moda['tonase'] = $request['tonase'];
-        $moda['duration'] = $request['duration'];
-        $moda['startFrom'] = $request['startFrom'];
-        $carbonDate = Carbon::parse($moda['startFrom']);
-        $moda['endTo'] = $carbonDate->addDays($moda['duration']);
+        $moda['duration'] = isset($request['duration']) ? $request['duration'] : null;
+        if (isset($request['startFrom'])){
+            $moda['startFrom'] = $request['startFrom'];
+            $carbonDate = Carbon::parse($moda['startFrom']);
+            $moda['endTo'] = $carbonDate->addDays($moda['duration']);
+        } else {
+            $moda['startFrom'] = null;
+            $moda['endTo'] = null;
+        }
         $moda['status'] = '0';
-        // $customer = Request::all();
-        // Mail delivery logic goes here
-
         Moda::create($moda);
-        
         return redirect()->route('moda');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Moda  $moda
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Moda $moda)
-    {
-        //
+    public function showDelivered() {
+
     }
 
     /**

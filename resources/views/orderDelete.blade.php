@@ -53,10 +53,14 @@ Tabel Sales Order
                 <td> {{$order->keterangan}} </td>
                 <td> 
                     @if($order->status == 1)
-                    In Delivery
-                   @else
-                  Outstanding
-                   @endif
+                        In Delivery
+                       @else
+                       @if ($order->status == 0)
+                      Outstanding
+                      @else
+                      Delivered
+                      @endif
+                       @endif
                 </td>
             </tr>
             <?php $id++; ?>

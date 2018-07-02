@@ -3,13 +3,22 @@
 @section('judul-halaman')
 Tabel Routing
 @endsection
+@section('selectBar')
+<select>
+    <option> Spanning Tree </option>
+    <option> Ant Colony System </option>
+    <option> Algoritma Genetika </option>
+    <option> Algoritma Bellman-Ford </option>
+    <option> Algoritma Floyd </option>
+</select>
+@endsection
 
 @section('additional-header')
 @if(count($newRouting) > 0)
-<a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Delivered </a>
+<a class="btn btn-danger" href="{{ route('routing-showDeliv')}}"> Delivered </a>
 <a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Hapus </a>
 @else
-<a class="btn btn-danger" href="{{ route('routing-showDelete')}}"> Delivered </a>
+<a class="btn btn-danger" href="{{ route('routing-showDeliv')}}" disabled> Delivered </a>
 <a class="btn btn-danger" href="{{ route('routing-showDelete')}}" disabled> Hapus </a>
 @endif
 <a class="btn btn-primary" href="{{ route('order') }}" type="button"> Input </a>
@@ -25,6 +34,7 @@ Tabel Routing
               {{-- <th> </th> --}}
               <th> No</th>
               <th> Customer</th>
+              <th> SO Number </th>
               <th> T. Jarak (km)</th>
               <th> T. Volume (cm<sup>3</sup>)</th>
               <th> Deliv Date</th>
@@ -38,6 +48,7 @@ Tabel Routing
                 {{-- <td> {{ Form::checkbox('pick[]', $order->id, false) }} </td> --}}
             <td> <a href="routing/details/{{$routing->groupId}}"><?php echo $id ?></a> </td>
                 <td> {{$routing->orderNumber}} </td>
+                <td> {{$routing->soNum}} </td>
                 <td> {{$routing->totalJarak}} </td>
                 <td> {{$routing->totalBerat}} </td>
                 <td> {{$routing->deliveryDate}} </td>

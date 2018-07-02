@@ -83,4 +83,9 @@ Route::post('/routing/delete', 'RoutingController@destroy')->name('routing-delet
 
 Route::get('/routing/details/{id}', 'RoutingController@details')->name('routing-details');
 
+Route::get('/routing/deliver', 'RoutingController@showDeliv')->name('routing-showDeliv');
+
+Route::post('/routing/deliver', 'RoutingController@deliv')->name('routing-deliv');
+
+
 Route::get('/history', 'HistoryController@index')->name('history');

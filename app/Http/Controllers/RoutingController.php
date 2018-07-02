@@ -36,6 +36,7 @@ class RoutingController extends Controller
             if ($value['groupId'] != $groupId) {
                 
                 $groupId = $value->groupId;
+                $value['soNum'] = 'SO_' . $value['orderNumber'];
                 $custid = Order::where('id', $value['orderNumber'])->value('customer');
                 $namaWarehouse = Vendor::where('id', Moda::where('id', $value['truck'])->value('vendor'))->value('nama');
                 $value['truck'] = Moda::where('id', $value['truck'])->value('nama');
@@ -47,8 +48,9 @@ class RoutingController extends Controller
                 $custid = Order::where('id', $value->orderNumber)->value('customer');
                 $namaCust = Customer::where('id', $custid)->value('nama');
                 $last = end($newRouting);
-                // $id = key($newRouting);
+                
                 $last['orderNumber'] = $last['orderNumber'] . ' --> ' . $namaCust;
+                $last['soNum'] = $last['soNum'] . ' --> ' . $value->orderNumber;
             }
             
         }
@@ -116,15 +118,32 @@ class RoutingController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Routing  $routing
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Routing $routing)
-    {
-        //
+    public function showDeliv() {
+        $routing = Routing::orderBy('groupId', 'asc')->get();
+        $newRouting = [];
+        $groupId = 0;
+        foreach ($routing as $value) {
+            if ($value['groupId'] != $groupId) {
+                
+                $groupId = $value->groupId;
+                $custid = Order::where('id', $value['orderNumber'])->value('customer');
+                $namaWarehouse = Vendor::where('id', Moda::where('id', $value['truck'])->value('vendor'))->value('nama');
+                $value['truck'] = Moda::where('id', $value['truck'])->value('nama');
+                $value['orderNumber'] = $namaWarehouse . ' --> ' . Customer::where('id', $custid)->value('nama');
+                $value['deliveryDate'] = Carbon::createFromFormat('Y-m-d', $value['deliveryDate'])->format('d M Y');
+                $newRouting[] = $value;
+                
+            } else {
+                $custid = Order::where('id', $value->orderNumber)->value('customer');
+                $namaCust = Customer::where('id', $custid)->value('nama');
+                $last = end($newRouting);
+                // $id = key($newRouting);
+                $last['orderNumber'] = $last['orderNumber'] . ' --> ' . $namaCust;
+            }
+            
+        }
+        
+        return view('routingDeliv', compact('newRouting'));
     }
 
     /**
@@ -134,9 +153,21 @@ class RoutingController extends Controller
      * @param  \App\Routing  $routing
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Routing $routing)
+    public function deliv(Request $request)
     {
-        //
+        if ($request->has('pick')) {
+            foreach ($request->input('pick') as $value) {
+                $listOrder = Routing::where('groupId', $value)->get();
+                // dd($listRoute);
+                foreach ($listOrder as $order) {
+                    Order::where('id', $order->orderNumber)->update(['status' => 2]);
+                }
+                // ambil nomor truk
+                Moda::where('id', $listOrder[0]->truck)->increment('quantity');
+                Routing::where('groupId', $value)->delete();
+            }
+        }
+        return redirect()->route('routing');
     }
 
     /**
@@ -152,7 +183,7 @@ class RoutingController extends Controller
                 $listOrder = Routing::where('groupId', $value)->get();
                 // dd($listRoute);
                 foreach ($listOrder as $order) {
-                    Order::where('id', $order->orderNumber)->update(['status' => 2]);
+                    Order::where('id', $order->orderNumber)->update(['status' => 0]);
                 }
                 // ambil nomor truk
                 Moda::where('id', $listOrder[0]->truck)->increment('quantity');

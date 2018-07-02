@@ -28,7 +28,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::where('status','<','2')->get();
+        $orders = Order::where('status','<','3')->get();
         foreach ($orders as $order) {
             // query
             $dataCust = Customer::where('id', $order['customer'])->first();
@@ -140,7 +140,7 @@ class OrderController extends Controller
     }
 
     public function showDelete() {
-        $orders = Order::where('status','<','2')->get();
+        $orders = Order::where('status','<','3')->get();
         foreach ($orders as $order) {
             // query
             $dataCust = Customer::where('id', $order['customer'])->first();
